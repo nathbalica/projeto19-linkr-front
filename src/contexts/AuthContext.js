@@ -1,5 +1,28 @@
-import { createContext } from "react"
+import { createContext, useState, useEffect } from "react";
 
-const AuthContext = createContext()
+const AuthContext = createContext();
 
-export default AuthContext
+export function AuthContextProvider({ children }){
+  const persiste = JSON.parse(localStorage.getItem("userAuth")) || null;
+    const [userAuth, setUserAuth] = useState(persiste);
+    
+    const login = (userData) => {
+      setUserAuth(userData);
+      localStorage.setItem("userAuth", JSON.stringify(userData)); 
+    }
+
+    useEffect(() => {
+      const persiste = JSON.parse(localStorage.getItem("userAuth"));
+      if (!persiste) {
+        setUserAuth(null);
+      }
+    }, []);
+
+    return (
+      <AuthContext.Provider value={{userAuth, login}}>
+        {children}
+      </AuthContext.Provider>
+    );
+  };
+
+export default AuthContext;
