@@ -18,7 +18,7 @@ export const AuthContainer = styled.section`
   }
 `;
 
-export const FormContainer = styled.div `
+export const FormContainer = styled.form `
   width: 100%;
   display: flex;
   flex-direction: column;
