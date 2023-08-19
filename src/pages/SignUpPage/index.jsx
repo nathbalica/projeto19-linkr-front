@@ -28,8 +28,6 @@ export default function SignUpPage() {
 
   }
 
-  
-
   return (
     <AuthContainer>
       <HeaderAuth>
@@ -78,7 +76,7 @@ export default function SignUpPage() {
           value={form.profile_image}
           onChange={handleForm}
         />
-        <ButtonAuth type="submit">Sign Up</ButtonAuth>
+        <ButtonAuth type="submit" to="/">Sign Up</ButtonAuth>
       <AuthLink to="/">
       Switch back to log in!
       </AuthLink>

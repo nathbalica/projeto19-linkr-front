@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 function configToken(token) {
   return { headers: { Authorization: `Bearer ${token}` } };
 }

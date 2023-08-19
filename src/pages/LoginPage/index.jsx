@@ -19,7 +19,9 @@ export default function LoginPage() {
 
     apis.singIn({ ...form })
       .then(res => {
+        console.log(res.data)
         login(res.data)
+        
         navigate('/timeline')
       })
       .catch(() => {
@@ -61,7 +63,7 @@ export default function LoginPage() {
           value={form.password}
           onChange={handleForm}
         />
-        <ButtonAuth type="submit">Log In</ButtonAuth>
+        <ButtonAuth type="submit" to="/timeline">Log In</ButtonAuth>
         <AuthLink to="/sign-up">
           First time? Create an account!
         </AuthLink>
