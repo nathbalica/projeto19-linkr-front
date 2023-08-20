@@ -42,6 +42,7 @@ export default function Posts({ post, updatePosts }) {
                     closeAlert={closeAlert}
                     token={token}
                     post_id={post.id}
+                    updatePosts={updatePosts}
                 />
             )}
             <Perfil>
@@ -62,7 +63,10 @@ export default function Posts({ post, updatePosts }) {
             <Content>
                 <Title>
                     <NameUser>{post.username}</NameUser>
-                    <DeleteIcon onClick={clickDelete} />
+                    <PostButtons>
+                        <EditIcon />
+                        <DeleteIcon onClick={clickDelete} />
+                    </PostButtons>
                 </Title>
                 <PostDescription>{post.content}</PostDescription>
 
@@ -91,17 +95,6 @@ const Perfil = styled.div`
     flex-direction: column;
     align-items: center;
     padding-right: 15px;
-`;
-
-const Title = styled.div`
-    display: flex;
-    justify-content: space-between;
-`;
-
-const DeleteIcon = styled(IoTrash)`
-    color: white;
-    cursor: pointer;
-    font-size: 20px;
 `;
 
 const HeartIconOutline = styled(IoHeartOutline)`
@@ -157,7 +150,7 @@ const PostDescription = styled.p`
 
 const LinkPost = styled.div`
     margin-top: 10px;
-    width: 100%;
+    width: 278px;
     height: 115px;
     background: blue;
     border-radius: 11px;
@@ -171,4 +164,25 @@ const Avatar = styled.img`
     border-radius: 50%;
     background-color: #ffffff; /* Cor de fundo caso a imagem tenha áreas transparentes */
     object-fit: cover; /* Garante que a imagem preencha o círculo */
+`;
+
+const Title = styled.div`
+    display: flex;
+    justify-content: space-between;
+`;
+
+const PostButtons = styled.p`
+    display: flex;
+    gap: 5px;
+`;
+
+const DeleteIcon = styled(IoTrash)`
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+`;
+const EditIcon = styled(BsPencilFill)`
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
 `;

@@ -97,6 +97,20 @@ async function publish(post, token) {
     }
 }
 
+async function deletePost(post_id, token) {
+    const config = configToken(token);
+    try {
+        const res = await axios.delete(
+            `${process.env.REACT_APP_API_URL}/remove/${post_id}`,
+            config
+        );
+        return res;
+    } catch (error) {
+        console.error("Erro ao deletar post:", error);
+        throw error;
+    }
+}
+
 const apis = {
     singIn,
     signUp,
@@ -106,6 +120,7 @@ const apis = {
     like,
     dislike,
     publish,
+    deletePost,
 };
 
 export default apis;
