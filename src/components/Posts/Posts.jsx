@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { BsPencilFill } from "react-icons/bs";
 import { IoHeartOutline, IoHeart, IoTrash } from "react-icons/io5";
 import apis from "../../services/apis";
-import DeleteAlert from "../Alert/Alert";
+import DeleteAlert from "../Alert/DeleteAlert";
 import React, { useState } from "react";
 
 export default function Posts({ post, updatePosts }) {
@@ -35,24 +35,11 @@ export default function Posts({ post, updatePosts }) {
         }
     }
 
-    function sendRequest(id, token) {
-        if (token) {
-            apis.deletePost(id, token)
-                .then(() => {
-                    updatePosts();
-                })
-                .catch((error) => {
-                    console.error("Não foi possível apagar post:", error);
-                });
-        }
-    }
-
     return (
         <ContainerPosts>
             {showAlert && (
                 <DeleteAlert
                     closeAlert={closeAlert}
-                    sendRequest={() => sendRequest(post.id, token)}
                     token={token}
                     post_id={post.id}
                 />
