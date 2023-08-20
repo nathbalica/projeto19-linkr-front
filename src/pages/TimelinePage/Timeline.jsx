@@ -1,20 +1,38 @@
-import { styled } from "styled-components"
-import Header from "../../components/Header/Header"
-import Publication from "../../components/Publication/Publication"
-import Posts from "../../components/Posts/Posts"
+import { styled } from "styled-components";
+import Header from "../../components/Header/Header";
+import Publication from "../../components/Publication/Publication";
+import Posts from "../../components/Posts/Posts";
+import apis from "../../services/apis";
+import { useEffect, useState } from "react";
 
 export default function Timeline() {
-  
+    const [timeline, setTimeline] = useState([]);
+    const token = localStorage.getItem("userAuth")
+        ? JSON.parse(localStorage.getItem("userAuth")).token
+        : null;
 
-  return (
-    <ContainerTimeline>
-      <Header />
-      <TextTimeline>timeline</TextTimeline>
-      <Publication />
-      <Posts />
-      <Posts />
-    </ContainerTimeline>
-  )
+    useEffect(() => {
+        console.log(token);
+        if (token) {
+            apis.timeline(token)
+                .then((data) => {
+                    setTimeline(data);
+                })
+                .catch((error) => {
+                    console.error("Erro ao buscar timeline:", error);
+                });
+        }
+    }, [token]);
+    return (
+        <ContainerTimeline>
+            <Header />
+            <TextTimeline>timeline</TextTimeline>
+            <Publication />
+            {timeline.map((post, index) => (
+                <Posts key={index} post={post} />
+            ))}
+        </ContainerTimeline>
+    );
 }
 
 const ContainerTimeline = styled.div `
