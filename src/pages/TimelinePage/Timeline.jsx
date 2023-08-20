@@ -6,7 +6,8 @@ import apis from "../../services/apis";
 import useAuth from "../../hooks/useAuth";
 import { ContainerTimeline, TextTimeline, NoPostsMessage, ContainerFeed, ContainerHashtags, ContainerContent } from "./styles"; // Importe o ContainerHashtags
 import Hashtags from "../../components/Hashtags/Hashtags";
-import { Helmet } from "react-helmet";
+import urlMetadata from 'url-metadata';
+
 
 export default function Timeline() {
     const [timeline, setTimeline] = useState([]);
@@ -41,7 +42,6 @@ export default function Timeline() {
                 </ContainerFeed>
 
                 <ContainerHashtags>
-                    
                     <Hashtags />
                 </ContainerHashtags>
             </ContainerContent>

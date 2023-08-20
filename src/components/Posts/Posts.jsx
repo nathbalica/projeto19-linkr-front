@@ -1,12 +1,37 @@
 import { styled } from "styled-components";
-import { Helmet } from "react-helmet-async";
-import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import apis from "../../services/apis";
+import { useEffect } from "react";
+import { useState } from "react";
+import { ContainerPosts, Perfil, HeartIconOutline, HeartIconFull, Likes, Content, NameUser, Avatar } from "./styles";
+
 
 export default function Posts({ post, updatePosts }) {
+    const [metaData, setMetaData] = useState(null);
+
     const token = localStorage.getItem("userAuth")
         ? JSON.parse(localStorage.getItem("userAuth")).token
         : null;
+
+    // console.log(post.link)
+
+    useEffect(() => {
+        if (post.link) {
+            apis.getMetaData(post.link)
+                .then((res) => {
+                    if (res) {
+                        setMetaData({
+                            title: res.title || "",
+                            description: res.description || "",
+                            images: res.images && res.images.length > 0 ? res.images[0] : "",
+                            url: post.link,
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        }
+    }, [post.link]);
 
     function toggleLike(id, liked) {
         if (token) {
@@ -42,73 +67,37 @@ export default function Posts({ post, updatePosts }) {
             <Content>
                 <NameUser>{post.username}</NameUser>
                 <PostDescription>{post.content}</PostDescription>
-                <LinkPost>{post.link}</LinkPost>
+                <LinkPost>
+                    {metaData && (
+                        <a href={metaData.url} target="_blank" rel="noopener noreferrer">
+                        <Articles>
+                            <MetaDataInfos>
+                                <h2>
+                                    {metaData.title.length > (window.innerWidth >= 768 ? 114 : 70)
+                                        ? metaData.title.substring(0, window.innerWidth >= 768 ? 40 : 70) + "..."
+                                        : metaData.title}
+                                </h2>
+                                <h3>
+                                    {metaData.description.length > (window.innerWidth >= 768 ? 240 : 120)
+                                        ? metaData.description.substring(0, window.innerWidth >= 768 ? 80 : 120) + "..."
+                                        : metaData.description}
+                                </h3>
+                                <p>
+                                    {metaData.url.length > (window.innerWidth >= 768 ? 200 : 80)
+                                        ? metaData.url.substring(0, window.innerWidth >= 768 ? 60 : 80) + "..."
+                                        : metaData.url}
+                                </p>
+                            </MetaDataInfos>
+                            {metaData.images && <MetaDataImage><img alt="a" src={metaData.images} /></MetaDataImage>}
+                        </Articles>
+                    </a>
+                    )}
+                </LinkPost>
             </Content>
         </ContainerPosts>
     );
 }
 
-const ContainerPosts = styled.div`
-    height: auto;
-    display: flex;
-    background: #171717;
-    padding: 15px;
-    margin-bottom: 20px;
-    flex-shrink: 0;
-    @media screen and (min-width: 768px) {
-    width: 100%;
-    height: 276px;
-    border-radius: 16px;
-  }
-`;
-
-const Perfil = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-right: 15px;
-`;
-
-const HeartIconOutline = styled(IoHeartOutline)`
-    color: white;
-    margin-top: 17px;
-    font-size: 20px;
-    cursor: pointer;
-`;
-
-const HeartIconFull = styled(IoHeart)`
-    color: red;
-    margin-top: 17px;
-    font-size: 20px;
-    cursor: pointer;
-`;
-
-const Likes = styled.p`
-    color: #fff;
-    text-align: center;
-    font-family: Lato;
-    font-size: 9px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    margin-top: 8px;
-`;
-
-const Content = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-top: 10px;
-`;
-
-const NameUser = styled.h2`
-    color: #fff;
-    font-family: Lato;
-    font-size: 17px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-`;
 
 const PostDescription = styled.p`
     margin-top: 10px;
@@ -120,20 +109,88 @@ const PostDescription = styled.p`
     line-height: normal;
 `;
 
-const LinkPost = styled.div`
-    margin-top: 10px;
-    width: 278px;
-    height: 115px;
-    background: blue;
-    border-radius: 11px;
-    border: 1px solid #4d4d4d;
-    background: rgba(196, 196, 196, 0);
+const Articles = styled.div`
+    display: flex;
+    align-items: center;
 `;
 
-const Avatar = styled.img`
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #ffffff; /* Cor de fundo caso a imagem tenha áreas transparentes */
-    object-fit: cover; /* Garante que a imagem preencha o círculo */
+const MetaDataInfos = styled.div`
+    padding-left: 10px;
+    padding-right: 10px;
+    flex: 1;
+    color: #fff;
+
+    h2{
+        color: #CECECE;
+        font-family: Lato;
+        font-size: 11px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-bottom: 5px;
+    }
+    h3{
+        color: #9B9595;
+        font-family: Lato;
+        font-size: 9px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-bottom: 5px;
+    }
+    p{
+        color: #CECECE;
+        font-family: Lato;
+        font-size: 9px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-bottom: 5px;
+    }
+
+    @media screen and (min-width: 768px) {
+        h2{
+            font-size: 16px;
+        }
+        h3{
+            font-size: 11px;
+        }
+        p{
+            font-size: 11px;
+        }
+    }
 `;
+
+const MetaDataImage = styled.div`
+    width: 95px;
+    height: 115px;
+    margin: 0;
+    overflow: hidden;
+    
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0px 13px 13px 0px;
+        flex-shrink: 0;
+    }
+    @media screen and (min-width: 768px) {
+        min-height: 155px;
+    }
+`;
+
+const LinkPost = styled.div`
+
+    margin-top: 10px;
+    width: 100%;
+    min-height: 115px;
+    border-radius: 13px;
+    border: 1px solid #4d4d4d;
+    cursor: pointer;
+    @media screen and (min-width: 768px) {
+        min-height: 155px;
+    }
+
+`;
+
+

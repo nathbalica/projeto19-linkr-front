@@ -82,6 +82,15 @@ async function dislike(id, token) {
     }
 }
 
+async function getMetaData(url) {
+  try {
+      const response = await axios.get(`https://jsonlink.io/api/extract?url=${url}`);
+      return response.data;
+  } catch (error) {
+      throw new Error("Erro ao buscar metadados");
+  }
+}
+
 const apis = {
     singIn,
     signUp,
@@ -90,6 +99,7 @@ const apis = {
     getUser,
     like,
     dislike,
+    getMetaData
 };
 
 export default apis;
