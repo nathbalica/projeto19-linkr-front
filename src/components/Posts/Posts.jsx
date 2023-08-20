@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-// import { FaHeart } from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import apis from "../../services/apis";
 
@@ -36,7 +36,7 @@ export default function Posts({ post, updatePosts }) {
                     />
                 )}
                 <Likes>
-                    {post.like_count} {post.like_count == 1 ? "like" : "likes"}
+                    {post.like_count} {post.like_count === 1 ? "like" : "likes"}
                 </Likes>
             </Perfil>
             <Content>
@@ -55,6 +55,11 @@ const ContainerPosts = styled.div`
     padding: 15px;
     margin-bottom: 20px;
     flex-shrink: 0;
+    @media screen and (min-width: 768px) {
+    width: 100%;
+    height: 276px;
+    border-radius: 16px;
+  }
 `;
 
 const Perfil = styled.div`

@@ -23,9 +23,8 @@ export const FormContainer = styled.form `
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
   padding: 23px;
-  height: calc(100vh - 175px);
+  min-height: calc(100vh - 175px);
 
 
   background-color: ${mainColor};
