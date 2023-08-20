@@ -54,3 +54,16 @@ export const ContainerHashtags = styled.div`
     margin-top: 115px;
     }
 `;
+
+export const LoadingContainer = styled.div`
+padding-top: 100px;
+margin-left: 165px;
+@media screen and (min-width: 768px) {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    margin-left: 130px;
+    width: 100%;
+    height: 100%; /* Set the height to 100% to ensure vertical centering */
+}
+`;

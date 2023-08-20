@@ -50,7 +50,7 @@ export const Likes = styled.p`
 export const Content = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 10px;
 `;
 

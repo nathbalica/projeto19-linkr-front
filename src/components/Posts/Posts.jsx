@@ -3,10 +3,12 @@ import apis from "../../services/apis";
 import { useEffect } from "react";
 import { useState } from "react";
 import { ContainerPosts, Perfil, HeartIconOutline, HeartIconFull, Likes, Content, NameUser, Avatar } from "./styles";
+import { RotatingLines } from "react-loader-spinner";
 
 
 export default function Posts({ post, updatePosts }) {
     const [metaData, setMetaData] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const token = localStorage.getItem("userAuth")
         ? JSON.parse(localStorage.getItem("userAuth")).token
@@ -16,6 +18,7 @@ export default function Posts({ post, updatePosts }) {
 
     useEffect(() => {
         if (post.link) {
+            setLoading(true);
             apis.getMetaData(post.link)
                 .then((res) => {
                     if (res) {
@@ -26,9 +29,11 @@ export default function Posts({ post, updatePosts }) {
                             url: post.link,
                         });
                     }
+                    setLoading(false);
                 })
                 .catch((err) => {
                     console.error(err);
+                    setLoading(false);
                 });
         }
     }, [post.link]);
@@ -65,39 +70,67 @@ export default function Posts({ post, updatePosts }) {
                 </Likes>
             </Perfil>
             <Content>
+
                 <NameUser>{post.username}</NameUser>
                 <PostDescription>{post.content}</PostDescription>
-                <LinkPost>
-                    {metaData && (
-                        <a href={metaData.url} target="_blank" rel="noopener noreferrer">
-                        <Articles>
-                            <MetaDataInfos>
-                                <h2>
-                                    {metaData.title.length > (window.innerWidth >= 768 ? 114 : 70)
-                                        ? metaData.title.substring(0, window.innerWidth >= 768 ? 40 : 70) + "..."
-                                        : metaData.title}
-                                </h2>
-                                <h3>
-                                    {metaData.description.length > (window.innerWidth >= 768 ? 240 : 120)
-                                        ? metaData.description.substring(0, window.innerWidth >= 768 ? 80 : 120) + "..."
-                                        : metaData.description}
-                                </h3>
-                                <p>
-                                    {metaData.url.length > (window.innerWidth >= 768 ? 200 : 80)
-                                        ? metaData.url.substring(0, window.innerWidth >= 768 ? 60 : 80) + "..."
-                                        : metaData.url}
-                                </p>
-                            </MetaDataInfos>
-                            {metaData.images && <MetaDataImage><img alt="a" src={metaData.images} /></MetaDataImage>}
-                        </Articles>
-                    </a>
-                    )}
-                </LinkPost>
+
+                {loading ? (
+                    <LoadingContainer>
+                        <RotatingLines
+                            strokeColor="white"
+                            strokeWidth="5"
+                            animationDuration="0.75"
+                            width="48"
+                            visible={true}
+                        />
+                    </LoadingContainer>
+
+                ) : (
+                    <LinkPost>
+                        {metaData && (
+                            <a href={metaData.url} target="_blank" rel="noopener noreferrer">
+                                <Articles>
+                                    <MetaDataInfos>
+                                        <h2>
+                                            {metaData.title.length > (window.innerWidth >= 768 ? 114 : 70)
+                                                ? metaData.title.substring(0, window.innerWidth >= 768 ? 40 : 70) + "..."
+                                                : metaData.title}
+                                        </h2>
+                                        <h3>
+                                            {metaData.description.length > (window.innerWidth >= 768 ? 240 : 120)
+                                                ? metaData.description.substring(0, window.innerWidth >= 768 ? 80 : 120) + "..."
+                                                : metaData.description}
+                                        </h3>
+                                        <p>
+                                            {metaData.url.length > (window.innerWidth >= 768 ? 200 : 80)
+                                                ? metaData.url.substring(0, window.innerWidth >= 768 ? 60 : 80) + "..."
+                                                : metaData.url}
+                                        </p>
+                                    </MetaDataInfos>
+                                    {metaData.images && <MetaDataImage><img alt="a" src={metaData.images} /></MetaDataImage>}
+                                </Articles>
+                            </a>
+
+                        )}
+                    </LinkPost>
+                )}
             </Content>
         </ContainerPosts>
     );
 }
 
+const LoadingContainer = styled.div`
+padding-top: 10px;
+margin-left: 100px;
+@media screen and (min-width: 768px) {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    margin-left: 130px;
+    width: 100%;
+    height: 100%; /* Set the height to 100% to ensure vertical centering */
+}
+`;
 
 const PostDescription = styled.p`
     margin-top: 10px;
@@ -180,7 +213,6 @@ const MetaDataImage = styled.div`
 `;
 
 const LinkPost = styled.div`
-
     margin-top: 10px;
     width: 100%;
     min-height: 115px;
