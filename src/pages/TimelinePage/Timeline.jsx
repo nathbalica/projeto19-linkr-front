@@ -35,17 +35,19 @@ export default function Timeline() {
     );
 }
 
-const ContainerTimeline = styled.div`
-    background-color: #333;
-    min-height: 100vh; /* Use min-height em vez de height */
-    padding-bottom: 20px;
-`;
+const ContainerTimeline = styled.div `
+  background-color: #333;
+  min-height: calc(100vh - 72px); /* Use min-height em vez de height */
+  padding-bottom: 20px; 
+  margin-top: 72px;
+`
 const TextTimeline = styled.h1`
-    padding: 20px;
-    color: #fff;
-    font-family: Oswald;
-    font-size: 33px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-`;
+  padding: 20px;
+  
+  color: #FFF;
+  font-family: Oswald;
+  font-size: 33px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal; 
+`

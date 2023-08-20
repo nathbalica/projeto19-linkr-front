@@ -11,6 +11,10 @@ export const ContainerHeader = styled.div`
     background-color: #151515;
     padding: 0 20px;
     box-sizing: border-box;
+
+    position: fixed;
+    top: 0;
+    z-index: 1000;
 `
 
 export const LogoName = styled.h1`
