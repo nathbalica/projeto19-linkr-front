@@ -1,8 +1,15 @@
 import { useState } from "react";
-import { ContainerPublish, TextTitle, ContentContainer, InputTitle, TextAreaContent, ButtonContainer, SubmitButton } from "./style";
+import {
+    ContainerPublish,
+    TextTitle,
+    ContentContainer,
+    InputTitle,
+    TextAreaContent,
+    ButtonContainer,
+    SubmitButton,
+} from "./style";
 
-
-export default function Publication() {
+export default function Publication({ updatePosts }) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
@@ -14,14 +21,30 @@ export default function Publication() {
         setContent(event.target.value);
     };
 
+    const token = localStorage.getItem("userAuth")
+        ? JSON.parse(localStorage.getItem("userAuth")).token
+        : null;
+
     const handleSubmit = () => {
-        // Lógica para enviar a publicação
+        const postObj = {
+            content,
+            link: title,
+        };
+
+        apis.publish(postObj, token)
+            .then((response) => {
+                console.log("Post publicado:", response);
+                setTitle("");
+                setContent("");
+                updatePosts();
+            })
+            .catch((error) => {
+                console.error("Erro ao publicar post:", error);
+            });
     };
     return (
         <ContainerPublish>
-            <TextTitle>
-                What are you going to share today?
-            </TextTitle>
+            <TextTitle>What are you going to share today?</TextTitle>
             <ContentContainer>
                 <InputTitle
                     placeholder="Your Link"
@@ -37,11 +60,6 @@ export default function Publication() {
             <ButtonContainer>
                 <SubmitButton onClick={handleSubmit}>Publish</SubmitButton>
             </ButtonContainer>
-
         </ContainerPublish>
-    )
+    );
 }
-
-
-
-

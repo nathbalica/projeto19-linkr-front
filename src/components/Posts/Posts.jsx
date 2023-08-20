@@ -1,9 +1,22 @@
 import { styled } from "styled-components";
 import { Helmet } from "react-helmet-async";
-import { IoHeartOutline, IoHeart } from "react-icons/io5";
+import { BsPencilFill } from "react-icons/bs";
+import { IoHeartOutline, IoHeart, IoTrash } from "react-icons/io5";
 import apis from "../../services/apis";
+import DeleteAlert from "../Alert/Alert";
+import React, { useState } from "react";
 
 export default function Posts({ post, updatePosts }) {
+    const [showAlert, setShowAlert] = useState(false);
+    const closeAlert = () => {
+        setShowAlert(false);
+        return;
+    };
+    function clickDelete() {
+        setShowAlert(true);
+        return;
+    }
+
     const token = localStorage.getItem("userAuth")
         ? JSON.parse(localStorage.getItem("userAuth")).token
         : null;
@@ -22,8 +35,28 @@ export default function Posts({ post, updatePosts }) {
         }
     }
 
+    function sendRequest(id, token) {
+        if (token) {
+            apis.deletePost(id, token)
+                .then(() => {
+                    updatePosts();
+                })
+                .catch((error) => {
+                    console.error("Não foi possível apagar post:", error);
+                });
+        }
+    }
+
     return (
         <ContainerPosts>
+            {showAlert && (
+                <DeleteAlert
+                    closeAlert={closeAlert}
+                    sendRequest={() => sendRequest(post.id, token)}
+                    token={token}
+                    post_id={post.id}
+                />
+            )}
             <Perfil>
                 <Avatar src={post.profile_image} />
                 {post.liked ? (
@@ -40,8 +73,12 @@ export default function Posts({ post, updatePosts }) {
                 </Likes>
             </Perfil>
             <Content>
-                <NameUser>{post.username}</NameUser>
+                <Title>
+                    <NameUser>{post.username}</NameUser>
+                    <DeleteIcon onClick={clickDelete} />
+                </Title>
                 <PostDescription>{post.content}</PostDescription>
+
                 <LinkPost>{post.link}</LinkPost>
             </Content>
         </ContainerPosts>
@@ -56,10 +93,10 @@ const ContainerPosts = styled.div`
     margin-bottom: 20px;
     flex-shrink: 0;
     @media screen and (min-width: 768px) {
-    width: 100%;
-    height: 276px;
-    border-radius: 16px;
-  }
+        width: 100%;
+        height: 276px;
+        border-radius: 16px;
+    }
 `;
 
 const Perfil = styled.div`
@@ -67,6 +104,17 @@ const Perfil = styled.div`
     flex-direction: column;
     align-items: center;
     padding-right: 15px;
+`;
+
+const Title = styled.div`
+    display: flex;
+    justify-content: space-between;
+`;
+
+const DeleteIcon = styled(IoTrash)`
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
 `;
 
 const HeartIconOutline = styled(IoHeartOutline)`
@@ -122,7 +170,7 @@ const PostDescription = styled.p`
 
 const LinkPost = styled.div`
     margin-top: 10px;
-    width: 278px;
+    width: 100%;
     height: 115px;
     background: blue;
     border-radius: 11px;

@@ -82,6 +82,21 @@ async function dislike(id, token) {
     }
 }
 
+async function publish(post, token) {
+    const config = configToken(token);
+    try {
+        const res = await axios.post(
+            `${process.env.REACT_APP_API_URL}/publish`,
+            post,
+            config
+        );
+        return res;
+    } catch (error) {
+        console.error("Erro ao descurtir post:", error);
+        throw error;
+    }
+}
+
 const apis = {
     singIn,
     signUp,
@@ -90,6 +105,7 @@ const apis = {
     getUser,
     like,
     dislike,
+    publish,
 };
 
 export default apis;
