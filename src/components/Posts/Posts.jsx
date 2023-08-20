@@ -36,7 +36,7 @@ export default function Posts({ post, updatePosts }) {
     }
 
     return (
-        <ContainerPosts>
+        <ContainerPosts data-test="post">
             {showAlert && (
                 <DeleteAlert
                     closeAlert={closeAlert}
@@ -62,15 +62,17 @@ export default function Posts({ post, updatePosts }) {
             </Perfil>
             <Content>
                 <Title>
-                    <NameUser>{post.username}</NameUser>
+                    <NameUser data-test="username">{post.username}</NameUser>
                     <PostButtons>
                         <EditIcon />
                         <DeleteIcon onClick={clickDelete} />
                     </PostButtons>
                 </Title>
-                <PostDescription>{post.content}</PostDescription>
+                <PostDescription data-test="description">
+                    {post.content}
+                </PostDescription>
 
-                <LinkPost>{post.link}</LinkPost>
+                <LinkPost data-test="link">{post.link}</LinkPost>
             </Content>
         </ContainerPosts>
     );

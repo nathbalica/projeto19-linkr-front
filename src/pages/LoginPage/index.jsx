@@ -61,6 +61,7 @@ export default function LoginPage() {
                     autoComplete="username"
                     placeholder="E-mail"
                     name="email"
+                    data-test="email"
                     value={form.email}
                     onChange={handleForm}
                 />
@@ -71,13 +72,14 @@ export default function LoginPage() {
                     autoComplete="new-password"
                     placeholder="password"
                     name="password"
+                    data-test="password"
                     value={form.password}
                     onChange={handleForm}
                 />
-                <ButtonAuth type="submit" to="/timeline">
+                <ButtonAuth type="submit" to="/timeline" data-test="login-btn">
                     Log In
                 </ButtonAuth>
-                <AuthLink to="/sign-up">
+                <AuthLink to="/sign-up" data-test="sign-up-link">
                     First time? Create an account!
                 </AuthLink>
             </FormContainer>

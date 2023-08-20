@@ -49,7 +49,7 @@ export default function Timeline() {
                     <TextTimeline>timeline</TextTimeline>
                     <Publication />
                     {timeline.length === 0 ? (
-                        <NoPostsMessage>
+                        <NoPostsMessage data-test="message">
                             There are no posts yet...
                         </NoPostsMessage>
                     ) : (

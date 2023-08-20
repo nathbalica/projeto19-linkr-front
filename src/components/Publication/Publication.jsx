@@ -8,6 +8,7 @@ import {
     ButtonContainer,
     SubmitButton,
 } from "./style";
+import apis from "../../services/apis";
 
 export default function Publication({ updatePosts }) {
     const [title, setTitle] = useState("");
@@ -43,22 +44,26 @@ export default function Publication({ updatePosts }) {
             });
     };
     return (
-        <ContainerPublish>
+        <ContainerPublish data-test="publish-box">
             <TextTitle>What are you going to share today?</TextTitle>
             <ContentContainer>
                 <InputTitle
                     placeholder="Your Link"
                     value={title}
                     onChange={handleTitleChange}
+                    data-test="link"
                 />
                 <TextAreaContent
                     placeholder="Write your content here..."
                     value={content}
                     onChange={handleContentChange}
+                    data-test="description"
                 />
             </ContentContainer>
             <ButtonContainer>
-                <SubmitButton onClick={handleSubmit}>Publish</SubmitButton>
+                <SubmitButton onClick={handleSubmit} data-test="publish-btn">
+                    Publish
+                </SubmitButton>
             </ButtonContainer>
         </ContainerPublish>
     );
