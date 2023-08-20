@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 export const ContainerTimeline = styled.div`
     min-height: 100vh;
     padding-bottom: 20px;
+    background-color: #333;
         
 
 `;
