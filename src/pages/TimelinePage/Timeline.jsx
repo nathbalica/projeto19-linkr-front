@@ -1,20 +1,20 @@
-import { styled } from "styled-components";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
 import Publication from "../../components/Publication/Publication";
 import Posts from "../../components/Posts/Posts";
 import apis from "../../services/apis";
-import { useEffect, useState } from "react";
+import useAuth from "../../hooks/useAuth";
+import { ContainerTimeline, TextTimeline, NoPostsMessage, ContainerFeed, ContainerHashtags, ContainerContent } from "./styles"; // Importe o ContainerHashtags
+import Hashtags from "../../components/Hashtags/Hashtags";
+import { Helmet } from "react-helmet";
 
 export default function Timeline() {
     const [timeline, setTimeline] = useState([]);
-    const token = localStorage.getItem("userAuth")
-        ? JSON.parse(localStorage.getItem("userAuth")).token
-        : null;
+    const { userAuth } = useAuth();
 
     useEffect(() => {
-        console.log(token);
-        if (token) {
-            apis.timeline(token)
+        if (userAuth.token) {
+            apis.timeline(userAuth.token)
                 .then((data) => {
                     setTimeline(data);
                 })
@@ -22,32 +22,29 @@ export default function Timeline() {
                     console.error("Erro ao buscar timeline:", error);
                 });
         }
-    }, [token]);
+    }, [userAuth.token]);
+
     return (
         <ContainerTimeline>
             <Header />
-            <TextTimeline>timeline</TextTimeline>
-            <Publication />
-            {timeline.map((post, index) => (
-                <Posts key={index} post={post} />
-            ))}
+            <ContainerContent>
+                <ContainerFeed>
+                    <TextTimeline>timeline</TextTimeline>
+                    <Publication />
+                    {timeline.length === 0 ? (
+                        <NoPostsMessage>There are no posts yet...</NoPostsMessage>
+                    ) : (
+                        timeline.map((post, index) => (
+                            <Posts key={index} post={post} />
+                        ))
+                    )}
+                </ContainerFeed>
+
+                <ContainerHashtags>
+                    
+                    <Hashtags />
+                </ContainerHashtags>
+            </ContainerContent>
         </ContainerTimeline>
     );
 }
-
-const ContainerTimeline = styled.div `
-  background-color: #333;
-  min-height: calc(100vh - 72px); /* Use min-height em vez de height */
-  padding-bottom: 20px; 
-  margin-top: 72px;
-`
-const TextTimeline = styled.h1`
-  padding: 20px;
-  
-  color: #FFF;
-  font-family: Oswald;
-  font-size: 33px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal; 
-`
