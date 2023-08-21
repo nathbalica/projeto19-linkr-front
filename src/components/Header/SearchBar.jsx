@@ -48,6 +48,7 @@ export default function SearchBar({token}) {
   return (
     <SearchContainer>
       <SearchInput
+        data-test="search"
         minLength={3}
         placeholder="Search users..."
         value={searchQuery}
@@ -57,7 +58,7 @@ export default function SearchBar({token}) {
       {showSuggestions && (
         <SuggestionsContainer>
           {searchResults.map((user) => (
-            <Suggestion key={user.id} onClick={() => handleSuggestionClick(user.username)}>
+            <Suggestion data-test="user-search" key={user.id} onClick={() => handleSuggestionClick(user.username)}>
               <SuggestionImage src={user.profile_image} />
               <SuggestionUsername>{user.username}</SuggestionUsername>
             </Suggestion>
