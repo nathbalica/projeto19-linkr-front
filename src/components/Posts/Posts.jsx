@@ -93,17 +93,17 @@ export default function Posts({ post, updatePosts }) {
                                     <MetaDataInfos>
                                         <h2>
                                             {metaData.title.length > (window.innerWidth >= 768 ? 114 : 70)
-                                                ? metaData.title.substring(0, window.innerWidth >= 768 ? 40 : 70) + "..."
+                                                ? metaData.title.substring(0, window.innerWidth >= 768 ? 114 : 70) + "..."
                                                 : metaData.title}
                                         </h2>
                                         <h3>
                                             {metaData.description.length > (window.innerWidth >= 768 ? 240 : 120)
-                                                ? metaData.description.substring(0, window.innerWidth >= 768 ? 80 : 120) + "..."
+                                                ? metaData.description.substring(0, window.innerWidth >= 768 ? 240 : 120) + "..."
                                                 : metaData.description}
                                         </h3>
                                         <p>
                                             {metaData.url.length > (window.innerWidth >= 768 ? 200 : 80)
-                                                ? metaData.url.substring(0, window.innerWidth >= 768 ? 60 : 80) + "..."
+                                                ? metaData.url.substring(0, window.innerWidth >= 768 ? 200 : 80) + "..."
                                                 : metaData.url}
                                         </p>
                                     </MetaDataInfos>
@@ -208,12 +208,13 @@ const MetaDataImage = styled.div`
         flex-shrink: 0;
     }
     @media screen and (min-width: 768px) {
-        min-height: 155px;
+        min-height: 153px;
     }
 `;
 
 const LinkPost = styled.div`
     margin-top: 10px;
+    margin-bottom: 10px;
     width: 100%;
     min-height: 115px;
     border-radius: 13px;

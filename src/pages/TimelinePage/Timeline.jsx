@@ -14,17 +14,20 @@ export default function Timeline() {
     const [timeline, setTimeline] = useState([]);
     const { userAuth } = useAuth();
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         if (userAuth.token) {
             apis.timeline(userAuth.token)
                 .then((data) => {
-                    setTimeline(data);
+                    const sortedPosts = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                    setTimeline(sortedPosts);
                     setLoading(false);
                 })
                 .catch((error) => {
                     console.error("Erro ao buscar timeline:", error);
                     setLoading(false);
+                    setError(true);
                 });
         }
     }, [userAuth.token]);
@@ -48,6 +51,8 @@ export default function Timeline() {
                                 visible={true}
                             />
                         </LoadingContainer>
+                    ) : error ? ( // Display an error message when there's an error
+                        <NoPostsMessage>An error occurred while trying to fetch the posts, please refresh the page</NoPostsMessage>
                     ) : timeline.length === 0 ? (
                         <NoPostsMessage>There are no posts yet...</NoPostsMessage>
                     ) : (
