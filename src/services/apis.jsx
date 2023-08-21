@@ -115,6 +115,22 @@ async function getPostTags(nameHashtag, token) {
     }
 }
 
+async function searchUsers(query, token) {
+    const config = configToken(token);
+    try {
+        const res = await axios.get(
+            `${process.env.REACT_APP_API_URL}/search?query=${query}`,
+            config
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Erro ao buscar usuários:", error);
+        throw error;
+    }
+}
+
+
+
 const apis = {
     singIn,
     signUp,
@@ -125,7 +141,8 @@ const apis = {
     dislike,
     getMetaData,
     getHashtags,
-    getPostTags
+    getPostTags,
+    searchUsers,
 };
 
 export default apis;

@@ -1,0 +1,120 @@
+import React, { useState, useEffect } from 'react';
+import { DebounceInput } from 'react-debounce-input';
+import styled from 'styled-components';
+import apis from '../../services/apis';
+
+
+export default function UserSearch({token}) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+
+  useEffect(() => {
+    if (searchQuery.length >= 3) {
+      apis.searchUsers(searchQuery, token)
+        .then((response) => {
+          setSearchResults(response);
+        })
+        .catch((error) => {
+          console.error('Error searching users:', error);
+        });
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchQuery, token]);
+
+  const handleSearchInputChange = (value) => {
+    setSearchQuery(value);
+    setShowSuggestions(value.length >= 3);
+  };
+
+  const handleSuggestionClick = (username) => {
+    setSearchQuery(username);
+    setShowSuggestions(false);
+  };
+
+  return (
+    <SearchContainer>
+      <SearchInput
+        minLength={3}
+        placeholder="Search users..."
+        value={searchQuery}
+        onChange={(e) => handleSearchInputChange(e.target.value)}
+      />
+      <SearchIcon>🔍</SearchIcon>
+      {showSuggestions && (
+        <SuggestionsContainer>
+          {searchResults.map((user) => (
+            <Suggestion key={user.id} onClick={() => handleSuggestionClick(user.username)}>
+              <SuggestionImage src={user.profile_image} />
+              <SuggestionUsername>{user.username}</SuggestionUsername>
+            </Suggestion>
+          ))}
+        </SuggestionsContainer>
+      )}
+    </SearchContainer>
+  );
+}
+
+const SearchInput = styled(DebounceInput)`
+  width: 563px;
+  height: 35px;
+  padding: 8px;
+  border: none;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  outline: none;
+`;
+
+const SearchContainer = styled.div`
+  margin-top: 20px;
+  position: relative;
+`;
+
+const SearchIcon = styled.span`
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+`;
+
+const SuggestionsContainer = styled.div`
+    position: absolute;
+    top: 35px;
+    left: 15px;
+    right: 0;
+    background-color: #EFEFEF;
+    border: none;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    height: auto;
+    width: 525px;
+`;
+
+const Suggestion = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+
+const SuggestionImage = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+`;
+
+const SuggestionUsername = styled.div`
+  font-weight: bold;
+`;
+
+

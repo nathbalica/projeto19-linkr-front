@@ -14,7 +14,7 @@ export const ContainerHeader = styled.div`
 
     position: fixed;
     top: 0;
-    z-index: 1000;
+    z-index: 10;
 `
 
 export const LogoName = styled.h1`
