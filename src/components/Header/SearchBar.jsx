@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DebounceInput } from 'react-debounce-input';
 import styled from 'styled-components';
 import apis from '../../services/apis';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function UserSearch({token}) {
@@ -9,6 +10,7 @@ export default function UserSearch({token}) {
   const [searchResults, setSearchResults] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (searchQuery.length >= 3) {
@@ -34,6 +36,15 @@ export default function UserSearch({token}) {
     setShowSuggestions(false);
   };
 
+  const handleSearchIconClick = () => {
+    if (searchQuery) {
+      const user = searchResults.find((user) => user.username === searchQuery);
+      if (user) {
+        navigate(`/user/${user.id}`); // Redirect to user's page using their ID
+      }
+    }
+  };
+
   return (
     <SearchContainer>
       <SearchInput
@@ -42,7 +53,7 @@ export default function UserSearch({token}) {
         value={searchQuery}
         onChange={(e) => handleSearchInputChange(e.target.value)}
       />
-      <SearchIcon>🔍</SearchIcon>
+      <SearchIcon onClick={handleSearchIconClick}>🔍</SearchIcon>
       {showSuggestions && (
         <SuggestionsContainer>
           {searchResults.map((user) => (
@@ -82,7 +93,7 @@ const SearchIcon = styled.span`
 
 const SuggestionsContainer = styled.div`
     position: absolute;
-    top: 35px;
+    top: 35.5px;
     left: 15px;
     right: 0;
     background-color: #EFEFEF;
