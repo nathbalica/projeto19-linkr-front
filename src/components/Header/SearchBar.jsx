@@ -5,7 +5,7 @@ import apis from '../../services/apis';
 import { useNavigate } from 'react-router-dom';
 
 
-export default function UserSearch({token}) {
+export default function SearchBar({token}) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -69,7 +69,12 @@ export default function UserSearch({token}) {
 }
 
 const SearchInput = styled(DebounceInput)`
-
+@media screen and (max-width: 768px) {
+  width: 100%;
+  margin-left: 10px;
+  border-radius: 10px;
+  height: 35px;
+}
  @media screen and (min-width: 768px) {
 
    width: 563px;
@@ -83,10 +88,10 @@ const SearchInput = styled(DebounceInput)`
 `;
 
 const SearchContainer = styled.div`
-@media screen and (max-width: 767px) {
-    display: none; /* Hide the SearchBar on smaller screens */
-  }
-
+@media screen and (max-width: 768px) {
+  margin-top: 10px;
+  position: relative;
+}
 @media screen and (min-width: 768px) {
   display: block;
   margin-top: 20px;
@@ -95,7 +100,13 @@ const SearchContainer = styled.div`
 `;
 
 const SearchIcon = styled.span`
-
+@media screen and (max-width: 768px) {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
 @media screen and (min-width: 768px) {
 
   position: absolute;
@@ -107,6 +118,20 @@ const SearchIcon = styled.span`
 `;
 
 const SuggestionsContainer = styled.div`
+@media screen and (max-width: 768px) {
+  position: absolute;
+  top: 33px;
+  left: 25px;
+  right: 0;
+  background-color: #EFEFEF;
+  border: none;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  height: auto;
+  width: 320px;
+}
 @media screen and (min-width: 768px) {
 
   position: absolute;
@@ -125,6 +150,17 @@ const SuggestionsContainer = styled.div`
 `;
 
 const Suggestion = styled.div`
+@media screen and (max-width: 768px) {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
 @media screen and (min-width: 768px) {
 
   display: flex;
@@ -139,6 +175,12 @@ const Suggestion = styled.div`
 `;
 
 const SuggestionImage = styled.img`
+@media screen and (max-width: 768px) {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
 @media screen and (min-width: 768px) {
   
   width: 30px;

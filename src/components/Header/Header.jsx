@@ -5,6 +5,7 @@ import { ContainerHeader, LogoName, UserContainer, ArrowUp, ArrowDown, Avatar, L
 import { useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import useAuth from "../../hooks/useAuth"
+import { styled } from "styled-components";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -48,7 +49,10 @@ export default function Header() {
     return (
         <ContainerHeader>
             <LogoName onClick={handleLogoClick}>linkr</LogoName>
+            <SearchContainer>
+
             <SearchBar token={userAuth.token} />
+            </SearchContainer>
             <UserContainer>
                 {isMenuOpen ? (
                     <ArrowUp onClick={toggleMenu} />
@@ -67,3 +71,9 @@ export default function Header() {
         </ContainerHeader>
     );
 }
+
+const SearchContainer = styled.div `
+@media screen and (max-width: 767px) {
+   display: none;
+}
+`
