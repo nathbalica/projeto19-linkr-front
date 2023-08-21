@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { IoHeartOutline, IoHeart, IoTrash } from "react-icons/io5";
 import { BsPencilFill } from "react-icons/bs";
 
-
 export const ContainerPosts = styled.div`
     height: auto;
     display: flex;
@@ -10,9 +9,8 @@ export const ContainerPosts = styled.div`
     padding: 15px;
     margin-bottom: 20px;
     flex-shrink: 0;
-    max-width: 561px;
+    width: 100%;
     @media screen and (min-width: 768px) {
-        width: 100%;
         height: 276px;
         border-radius: 16px;
     }
@@ -64,7 +62,6 @@ export const Content = styled.div`
     justify-content: space-between;
     margin-top: 10px;
     width: 100%;
-
 `;
 
 export const NameUser = styled.h2`
