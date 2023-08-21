@@ -82,6 +82,53 @@ async function dislike(id, token) {
     }
 }
 
+async function publish(post, token) {
+    const config = configToken(token);
+    try {
+        const res = await axios.post(
+            `${process.env.REACT_APP_API_URL}/publish`,
+            post,
+            config
+        );
+        return res;
+    } catch (error) {
+        console.error("Erro ao descurtir post:", error);
+        throw error;
+    }
+}
+
+async function deletePost(post_id, token) {
+    const config = configToken(token);
+    try {
+        const res = await axios.delete(
+            `${process.env.REACT_APP_API_URL}/remove/${post_id}`,
+            config
+        );
+        return res;
+    } catch (error) {
+        console.error("Erro ao deletar post:", error);
+        throw error;
+    }
+}
+
+async function editPost(id, content, token) {
+    const config = configToken(token);
+    const body = {
+        content: content,
+    };
+    try {
+        const res = await axios.put(
+            `${process.env.REACT_APP_API_URL}/edit/${id}`,
+            body,
+            config
+        );
+        return res;
+    } catch (error) {
+        console.error("Erro ao editar post:", error);
+        throw error;
+    }
+}
+
 async function getMetaData(url) {
   try {
       const response = await axios.get(`https://jsonlink.io/api/extract?url=${url}`);
@@ -125,7 +172,10 @@ const apis = {
     dislike,
     getMetaData,
     getHashtags,
-    getPostTags
+    getPostTags,
+    publish,
+    deletePost,
+    editPost,
 };
 
 export default apis;
