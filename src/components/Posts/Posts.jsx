@@ -24,10 +24,12 @@ import {
     MetaDataImage,
 } from "./styles";
 import { RotatingLines } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
 
 export default function Posts({ post, updatePosts }) {
     const [metaData, setMetaData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const [showAlert, setShowAlert] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -36,6 +38,11 @@ export default function Posts({ post, updatePosts }) {
     const token = localStorage.getItem("userAuth")
         ? JSON.parse(localStorage.getItem("userAuth")).token
         : null;
+
+    const handleProfileClick = () => {
+        navigate(`/user/${post.user_id}`); // Navigate to the user's profile
+    };
+
     useEffect(() => {
         if (post.link) {
             setLoading(true);
@@ -142,7 +149,7 @@ export default function Posts({ post, updatePosts }) {
                 />
             )}
             <Perfil>
-                <Avatar src={post.profile_image} />
+                <Avatar src={post.profile_image} onClick={handleProfileClick}/>
                 {post.liked ? (
                     <HeartIconFull
                         onClick={() => toggleLike(post.id, post.liked)}
@@ -158,7 +165,7 @@ export default function Posts({ post, updatePosts }) {
             </Perfil>
             <Content>
                 <Title>
-                    <NameUser data-test="username">{post.username}</NameUser>
+                    <NameUser data-test="username" onClick={handleProfileClick}>{post.username}</NameUser>
                     {post.owned && (
                         <PostButtons>
                             <EditIcon onClick={toggleEdit} />

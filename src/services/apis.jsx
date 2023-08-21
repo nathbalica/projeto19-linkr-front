@@ -138,6 +138,30 @@ async function getMetaData(url) {
   }
 }
 
+async function getHashtags(token) {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/trending`);
+        return response.data;
+    } catch (error) {
+        throw new Error("Erro ao buscar metadados");
+    }
+}
+
+async function getPostTags(nameHashtag, token) {
+    const config = configToken(token);
+    console.log(config);
+    try {
+        const res = axios.get(
+            `${process.env.REACT_APP_API_URL}/hashtag/${nameHashtag}`,
+            config
+        );
+        return res;
+    } catch (error) {
+        console.error("Erro ao buscar posts das tags do usuário:", error);
+        throw error;
+    }
+}
+
 const apis = {
     singIn,
     signUp,
@@ -146,10 +170,12 @@ const apis = {
     getUser,
     like,
     dislike,
+    getMetaData,
+    getHashtags,
+    getPostTags,
     publish,
     deletePost,
     editPost,
-    getMetaData,
 };
 
 export default apis;

@@ -1,14 +1,7 @@
-import avatar from "../../assets/abyssinian.jpg";
+import avatar from "../../assets/abyssinian.jpg"
 import { useState, useEffect, useRef } from "react";
-import {
-    ContainerHeader,
-    LogoName,
-    UserContainer,
-    ArrowUp,
-    ArrowDown,
-    Avatar,
-    LogoutMenu,
-} from "./style";
+import { ContainerHeader, LogoName, UserContainer, ArrowUp, ArrowDown, Avatar, LogoutMenu } from "./style";
+
 import { useNavigate } from "react-router-dom";
 
 export default function Header() {
@@ -18,6 +11,10 @@ export default function Header() {
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    const handleLogoClick = () => {
+        navigate("/timeline"); // Navigate to the timeline
     };
 
     const closeMenu = (event) => {
@@ -47,7 +44,7 @@ export default function Header() {
 
     return (
         <ContainerHeader>
-            <LogoName>linkr</LogoName>
+            <LogoName onClick={handleLogoClick}>linkr</LogoName>
             <UserContainer>
                 {isMenuOpen ? (
                     <ArrowUp onClick={toggleMenu} />
