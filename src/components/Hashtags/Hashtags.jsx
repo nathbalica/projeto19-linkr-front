@@ -1,28 +1,39 @@
 import { styled } from "styled-components"
+import { useEffect, useState } from "react";
+import apis from "../../services/apis";
+import { Link } from 'react-router-dom';
+
 
 export default function Hashtags() {
+    const [trendingHashtags, setTrendingHashtags] = useState([]);
+
+    useEffect(() => {
+        fetchTrendingHashtags();
+    }, []);
+
+    async function fetchTrendingHashtags() {
+        try {
+            const hashtags = await apis.getHashtags();
+            setTrendingHashtags(hashtags);
+        } catch (error) {
+            console.error("Error fetching trending hashtags:", error);
+        }
+    }
+
     return (
         <ContainerTrending>
-            <HeaderTags>
-                trending
-            </HeaderTags>
-
+            <HeaderTags>trending</HeaderTags>
             <TrendingsText>
-                <Tag># javascript</Tag>
-                <Tag># react</Tag>
-                <Tag># react-native</Tag>
-                <Tag># material</Tag>
-                <Tag># web-dev</Tag>
-                <Tag># mobile</Tag>
-                <Tag># css</Tag>
-                <Tag># html</Tag>
-                <Tag># node</Tag>
-                <Tag># sql</Tag>
+                {trendingHashtags.map((hashtag, index) => (
+                    <Link key={index} to={`/hashtag/${hashtag.name.substring(1)}`}>
+                        <Tag>{hashtag.name}</Tag>
+                    </Link>
+                ))}
             </TrendingsText>
-
         </ContainerTrending>
-    )
+    );
 }
+
 
 const ContainerTrending = styled.div`
 @media screen and (min-width: 768px) {
@@ -32,9 +43,7 @@ const ContainerTrending = styled.div`
 }
     
 `
-
 const TrendingsText = styled.div`
-    color: white;
     background: #171717;
     border-top: 1px solid #484848; /* Adiciona o risco cinza de separação */
     padding-top: 10px; 
@@ -59,4 +68,6 @@ const HeaderTags = styled.div`
 
 const Tag = styled.div`
   line-height: 1.5; /* Ajuste o espaçamento vertical entre as tags */
+  cursor: pointer;
+  color: white;
 `;

@@ -33,7 +33,6 @@ export default function Timeline() {
     }, [userAuth.token]);
 
 
-
     return (
         <ContainerTimeline>
             <Header />

@@ -4,17 +4,22 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { ContainerPosts, Perfil, HeartIconOutline, HeartIconFull, Likes, Content, NameUser, Avatar } from "./styles";
 import { RotatingLines } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Posts({ post, updatePosts }) {
     const [metaData, setMetaData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const token = localStorage.getItem("userAuth")
         ? JSON.parse(localStorage.getItem("userAuth")).token
         : null;
 
-    // console.log(post.link)
+
+        const handleProfileClick = () => {
+            navigate(`/user/${post.user_id}`); // Navigate to the user's profile
+        };
 
     useEffect(() => {
         if (post.link) {
@@ -55,7 +60,7 @@ export default function Posts({ post, updatePosts }) {
     return (
         <ContainerPosts>
             <Perfil>
-                <Avatar src={post.profile_image} />
+                <Avatar src={post.profile_image} onClick={handleProfileClick}/>
                 {post.liked ? (
                     <HeartIconFull
                         onClick={() => toggleLike(post.id, post.liked)}
@@ -71,7 +76,7 @@ export default function Posts({ post, updatePosts }) {
             </Perfil>
             <Content>
 
-                <NameUser>{post.username}</NameUser>
+                <NameUser onClick={handleProfileClick}>{post.username}</NameUser>
                 <PostDescription>{post.content}</PostDescription>
 
                 {loading ? (

@@ -5,7 +5,6 @@ export const ContainerTimeline = styled.div`
     padding-bottom: 20px;
     background-color: #333;
         
-
 `;
 
 export const ContainerFeed = styled.div`

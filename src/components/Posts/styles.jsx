@@ -61,6 +61,7 @@ export const NameUser = styled.h2`
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+    cursor: pointer;
 `;
 
 export const Avatar = styled.img`
