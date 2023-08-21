@@ -47,7 +47,7 @@ export default function Timeline() {
             <ContainerContent>
                 <ContainerFeed>
                     <TextTimeline>timeline</TextTimeline>
-                    <Publication />
+                    <Publication updatePosts={updatePosts} />
                     {timeline.length === 0 ? (
                         <NoPostsMessage data-test="message">
                             There are no posts yet...

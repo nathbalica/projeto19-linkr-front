@@ -111,6 +111,24 @@ async function deletePost(post_id, token) {
     }
 }
 
+async function editPost(id, content, token) {
+    const config = configToken(token);
+    const body = {
+        content: content,
+    };
+    try {
+        const res = await axios.put(
+            `${process.env.REACT_APP_API_URL}/edit/${id}`,
+            body,
+            config
+        );
+        return res;
+    } catch (error) {
+        console.error("Erro ao editar post:", error);
+        throw error;
+    }
+}
+
 const apis = {
     singIn,
     signUp,
@@ -121,6 +139,7 @@ const apis = {
     dislike,
     publish,
     deletePost,
+    editPost,
 };
 
 export default apis;

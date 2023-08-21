@@ -1,13 +1,32 @@
-import { styled } from "styled-components";
 import { Helmet } from "react-helmet-async";
-import { BsPencilFill } from "react-icons/bs";
-import { IoHeartOutline, IoHeart, IoTrash } from "react-icons/io5";
 import apis from "../../services/apis";
 import DeleteAlert from "../Alert/DeleteAlert";
 import React, { useState } from "react";
+import {
+    ContainerPosts,
+    EditBoxContainer,
+    Perfil,
+    HeartIconOutline,
+    HeartIconFull,
+    Likes,
+    Content,
+    NameUser,
+    PostDescription,
+    LinkPost,
+    Avatar,
+    Title,
+    PostButtons,
+    DeleteIcon,
+    EditIcon,
+    TextAreaContent,
+} from "./style";
 
 export default function Posts({ post, updatePosts }) {
+    console.log(post);
     const [showAlert, setShowAlert] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [editedContent, setEditedContent] = useState("");
+
     const closeAlert = () => {
         setShowAlert(false);
         return;
@@ -34,6 +53,40 @@ export default function Posts({ post, updatePosts }) {
             }
         }
     }
+
+    const toggleEdit = () => {
+        setIsEditOpen(!isEditOpen);
+        if (!isEditOpen) {
+            setEditedContent(post.content);
+        }
+    };
+
+    const handleContentChange = (event) => {
+        setEditedContent(event.target.value);
+    };
+
+    const sendEdit = () => {
+        if (editedContent.trim() === "") {
+            return;
+        }
+        if (token) {
+            apis.editPost(post.id, editedContent, token)
+                .then(() => {
+                    setIsEditOpen(false);
+                    updatePosts();
+                })
+                .catch((error) => {
+                    console.error("Erro ao editar post:", error);
+                });
+        }
+    };
+
+    const pressEnter = (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendEdit();
+        }
+    };
 
     return (
         <ContainerPosts data-test="post">
@@ -63,11 +116,24 @@ export default function Posts({ post, updatePosts }) {
             <Content>
                 <Title>
                     <NameUser data-test="username">{post.username}</NameUser>
-                    <PostButtons>
-                        <EditIcon />
-                        <DeleteIcon onClick={clickDelete} />
-                    </PostButtons>
+                    {post.owned && (
+                        <PostButtons>
+                            <EditIcon onClick={toggleEdit} />
+                            <DeleteIcon onClick={clickDelete} />
+                        </PostButtons>
+                    )}
                 </Title>
+                {isEditOpen && (
+                    <EditBoxContainer>
+                        <TextAreaContent
+                            value={editedContent}
+                            onChange={handleContentChange}
+                            cols={50}
+                            onKeyDown={pressEnter}
+                            autoFocus
+                        />
+                    </EditBoxContainer>
+                )}
                 <PostDescription data-test="description">
                     {post.content}
                 </PostDescription>
@@ -77,114 +143,3 @@ export default function Posts({ post, updatePosts }) {
         </ContainerPosts>
     );
 }
-
-const ContainerPosts = styled.div`
-    height: auto;
-    display: flex;
-    background: #171717;
-    padding: 15px;
-    margin-bottom: 20px;
-    flex-shrink: 0;
-    @media screen and (min-width: 768px) {
-        width: 100%;
-        height: 276px;
-        border-radius: 16px;
-    }
-`;
-
-const Perfil = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-right: 15px;
-`;
-
-const HeartIconOutline = styled(IoHeartOutline)`
-    color: white;
-    margin-top: 17px;
-    font-size: 20px;
-    cursor: pointer;
-`;
-
-const HeartIconFull = styled(IoHeart)`
-    color: red;
-    margin-top: 17px;
-    font-size: 20px;
-    cursor: pointer;
-`;
-
-const Likes = styled.p`
-    color: #fff;
-    text-align: center;
-    font-family: Lato;
-    font-size: 9px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    margin-top: 8px;
-`;
-
-const Content = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-top: 10px;
-`;
-
-const NameUser = styled.h2`
-    color: #fff;
-    font-family: Lato;
-    font-size: 17px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-`;
-
-const PostDescription = styled.p`
-    margin-top: 10px;
-    color: #b7b7b7;
-    font-family: Lato;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-`;
-
-const LinkPost = styled.div`
-    margin-top: 10px;
-    width: 278px;
-    height: 115px;
-    background: blue;
-    border-radius: 11px;
-    border: 1px solid #4d4d4d;
-    background: rgba(196, 196, 196, 0);
-`;
-
-const Avatar = styled.img`
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #ffffff; /* Cor de fundo caso a imagem tenha áreas transparentes */
-    object-fit: cover; /* Garante que a imagem preencha o círculo */
-`;
-
-const Title = styled.div`
-    display: flex;
-    justify-content: space-between;
-`;
-
-const PostButtons = styled.p`
-    display: flex;
-    gap: 5px;
-`;
-
-const DeleteIcon = styled(IoTrash)`
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-`;
-const EditIcon = styled(BsPencilFill)`
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-`;
