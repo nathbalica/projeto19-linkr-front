@@ -24,10 +24,12 @@ import {
     MetaDataImage,
 } from "./styles";
 import { RotatingLines } from "react-loader-spinner";
+import { styled } from "styled-components";
 
 export default function Posts({ post, updatePosts }) {
     const [metaData, setMetaData] = useState(null);
     const [loading, setLoading] = useState(false);
+
     const [showAlert, setShowAlert] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [editedContent, setEditedContent] = useState("");
@@ -35,7 +37,6 @@ export default function Posts({ post, updatePosts }) {
     const token = localStorage.getItem("userAuth")
         ? JSON.parse(localStorage.getItem("userAuth")).token
         : null;
-
     useEffect(() => {
         if (post.link) {
             setLoading(true);
@@ -45,10 +46,7 @@ export default function Posts({ post, updatePosts }) {
                         setMetaData({
                             title: res.title || "",
                             description: res.description || "",
-                            images:
-                                res.images && res.images.length > 0
-                                    ? res.images[0]
-                                    : "",
+                            images: res.images && res.images.length > 0 ? res.images[0] : "",
                             url: post.link,
                         });
                     }
@@ -192,64 +190,30 @@ export default function Posts({ post, updatePosts }) {
                             visible={true}
                         />
                     </LoadingContainer>
+
                 ) : (
                     <LinkPost>
                         {metaData && (
-                            <a
-                                href={metaData.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
+                            <a href={metaData.url} target="_blank" rel="noopener noreferrer">
                                 <Articles>
                                     <MetaDataInfos>
                                         <h2>
-                                            {metaData.title.length >
-                                            (window.innerWidth >= 768
-                                                ? 114
-                                                : 70)
-                                                ? metaData.title.substring(
-                                                      0,
-                                                      window.innerWidth >= 768
-                                                          ? 114
-                                                          : 70
-                                                  ) + "..."
+                                            {metaData.title.length > (window.innerWidth >= 768 ? 114 : 70)
+                                                ? metaData.title.substring(0, window.innerWidth >= 768 ? 114 : 70) + "..."
                                                 : metaData.title}
                                         </h2>
                                         <h3>
-                                            {metaData.description.length >
-                                            (window.innerWidth >= 768
-                                                ? 240
-                                                : 120)
-                                                ? metaData.description.substring(
-                                                      0,
-                                                      window.innerWidth >= 768
-                                                          ? 240
-                                                          : 120
-                                                  ) + "..."
+                                            {metaData.description.length > (window.innerWidth >= 768 ? 240 : 120)
+                                                ? metaData.description.substring(0, window.innerWidth >= 768 ? 240 : 120) + "..."
                                                 : metaData.description}
                                         </h3>
                                         <p>
-                                            {metaData.url.length >
-                                            (window.innerWidth >= 768
-                                                ? 200
-                                                : 80)
-                                                ? metaData.url.substring(
-                                                      0,
-                                                      window.innerWidth >= 768
-                                                          ? 200
-                                                          : 80
-                                                  ) + "..."
+                                            {metaData.url.length > (window.innerWidth >= 768 ? 200 : 80)
+                                                ? metaData.url.substring(0, window.innerWidth >= 768 ? 200 : 80) + "..."
                                                 : metaData.url}
                                         </p>
                                     </MetaDataInfos>
-                                    {metaData.images && (
-                                        <MetaDataImage>
-                                            <img
-                                                alt="a"
-                                                src={metaData.images}
-                                            />
-                                        </MetaDataImage>
-                                    )}
+                                    {metaData.images && <MetaDataImage><img alt="a" src={metaData.images} /></MetaDataImage>}
                                 </Articles>
                             </a>
                         )}

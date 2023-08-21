@@ -16,6 +16,7 @@ import {
 } from "./styles"; // Importe o ContainerHashtags
 import Hashtags from "../../components/Hashtags/Hashtags";
 
+
 export default function Timeline() {
     const [timeline, setTimeline] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -49,6 +50,8 @@ export default function Timeline() {
             });
     };
 
+
+
     return (
         <ContainerTimeline>
             <Header />
@@ -67,14 +70,9 @@ export default function Timeline() {
                             />
                         </LoadingContainer>
                     ) : error ? ( // Display an error message when there's an error
-                        <NoPostsMessage>
-                            An error occurred while trying to fetch the posts,
-                            please refresh the page
-                        </NoPostsMessage>
+                        <NoPostsMessage>An error occurred while trying to fetch the posts, please refresh the page</NoPostsMessage>
                     ) : timeline.length === 0 ? (
-                        <NoPostsMessage>
-                            There are no posts yet...
-                        </NoPostsMessage>
+                        <NoPostsMessage>There are no posts yet...</NoPostsMessage>
                     ) : (
                         timeline.map((post, index) => (
                             <Posts
@@ -93,3 +91,5 @@ export default function Timeline() {
         </ContainerTimeline>
     );
 }
+
+
