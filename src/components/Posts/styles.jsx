@@ -1,5 +1,6 @@
-import { styled } from "styled-components";
-import { IoHeartOutline, IoHeart } from "react-icons/io5";
+import styled from "styled-components";
+import { IoHeartOutline, IoHeart, IoTrash } from "react-icons/io5";
+import { BsPencilFill } from "react-icons/bs";
 
 export const ContainerPosts = styled.div`
     height: auto;
@@ -8,11 +9,19 @@ export const ContainerPosts = styled.div`
     padding: 15px;
     margin-bottom: 20px;
     flex-shrink: 0;
-    @media screen and (min-width: 768px) {
     width: 100%;
-    height: 276px;
-    border-radius: 16px;
-  }
+    @media screen and (min-width: 768px) {
+        height: 276px;
+        border-radius: 16px;
+    }
+`;
+
+export const EditBoxContainer = styled.div`
+    background-color: white;
+    color: #333333;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
 `;
 
 export const Perfil = styled.div`
@@ -50,8 +59,9 @@ export const Likes = styled.p`
 export const Content = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     margin-top: 10px;
+    width: 100%;
 `;
 
 export const NameUser = styled.h2`
@@ -63,6 +73,96 @@ export const NameUser = styled.h2`
     line-height: normal;
 `;
 
+export const PostDescription = styled.p`
+    margin-top: 10px;
+    color: #b7b7b7;
+    font-family: Lato;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+`;
+export const Articles = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+export const MetaDataInfos = styled.div`
+    padding-left: 10px;
+    padding-right: 10px;
+    flex: 1;
+    color: #fff;
+    h2 {
+        color: #cecece;
+        font-family: Lato;
+        font-size: 11px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-bottom: 5px;
+    }
+    h3 {
+        color: #9b9595;
+        font-family: Lato;
+        font-size: 9px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-bottom: 5px;
+    }
+    p {
+        color: #cecece;
+        font-family: Lato;
+        font-size: 9px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-bottom: 5px;
+    }
+    @media screen and (min-width: 768px) {
+        h2 {
+            font-size: 16px;
+        }
+        h3 {
+            font-size: 11px;
+        }
+        p {
+            font-size: 11px;
+        }
+    }
+`;
+
+export const MetaDataImage = styled.div`
+    width: 95px;
+    height: 115px;
+    margin: 0;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0px 13px 13px 0px;
+        flex-shrink: 0;
+    }
+    @media screen and (min-width: 768px) {
+        min-height: 153px;
+    }
+`;
+
+export const LinkPost = styled.div`
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    min-height: 115px;
+    border-radius: 13px;
+    border: 1px solid #4d4d4d;
+    cursor: pointer;
+    @media screen and (min-width: 768px) {
+        min-height: 155px;
+    }
+`;
+
 export const Avatar = styled.img`
     width: 40px;
     height: 40px;
@@ -71,3 +171,58 @@ export const Avatar = styled.img`
     object-fit: cover; /* Garante que a imagem preencha o círculo */
 `;
 
+export const Title = styled.div`
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+`;
+
+export const PostButtons = styled.p`
+    display: flex;
+    gap: 5px;
+`;
+
+export const DeleteIcon = styled(IoTrash)`
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+`;
+export const EditIcon = styled(BsPencilFill)`
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+`;
+
+export const TextAreaContent = styled.textarea`
+    width: 100%;
+    min-height: 47px;
+    padding: 8px;
+    margin-top: 10px;
+    border-radius: 5px;
+    background: white;
+    box-sizing: border-box;
+    border: none;
+
+    color: #333333;
+    font-family: Lato;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+`;
+TextAreaContent.defaultProps = {
+    id: "edit-textarea",
+};
+
+export const LoadingContainer = styled.div`
+    padding-top: 10px;
+    margin-left: 100px;
+    @media screen and (min-width: 768px) {
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        margin-left: 130px;
+        width: 100%;
+        height: 100%; /* Set the height to 100% to ensure vertical centering */
+    }
+`;
