@@ -14,21 +14,35 @@ import {
     LoadingContainer,
 } from "./styles"; // Importe o ContainerHashtags
 import Hashtags from "../../components/Hashtags/Hashtags";
+import useAuth from "../../hooks/useAuth";
 
 export default function Timeline() {
     const [timeline, setTimeline] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const { userAuth } = useAuth()
 
-    const token = localStorage.getItem("userAuth")
-        ? JSON.parse(localStorage.getItem("userAuth")).token
-        : null;
+    // const token = localStorage.getItem("userAuth")
+    //     ? JSON.parse(localStorage.getItem("userAuth")).token
+    //     : null;
 
     useEffect(() => {
-        if (token) {
+        if (userAuth.token) {
+            async function getTimeline (){
+                apis.timeline(userAuth.token)
+                    .then((data) => {
+                        setTimeline(data);
+                        setLoading(false);
+                    })
+                    .catch((error) => {
+                        console.error("Erro ao buscar timeline:", error);
+                        setLoading(false);
+                        setError(true);
+                    });
+            };
             getTimeline();
         }
-    }, [token]);
+    }, [userAuth.token]);
 
     const updatePosts = () => {
         setLoading(true);
@@ -36,7 +50,7 @@ export default function Timeline() {
     };
 
     const getTimeline = () => {
-        apis.timeline(token)
+        apis.timeline(userAuth.token)
             .then((data) => {
                 setTimeline(data);
                 setLoading(false);

@@ -21,9 +21,9 @@ export default function Hashtags() {
     }
 
     return (
-        <ContainerTrending>
+        <ContainerTrending >
             <HeaderTags>trending</HeaderTags>
-            <TrendingsText>
+            <TrendingsText data-test="hashtag">
                 {trendingHashtags.map((hashtag, index) => (
                     <Link key={index} to={`/hashtag/${hashtag.name.substring(1)}`}>
                         <Tag>{hashtag.name}</Tag>

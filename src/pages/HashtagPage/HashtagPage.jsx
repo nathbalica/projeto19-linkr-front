@@ -41,8 +41,8 @@ export default function HashtagPage() {
         <ContainerTimeline>
             <Header />
             <ContainerContent>
-                <ContainerFeed>
-                    <TextTimeline>#{hashtag}</TextTimeline>
+                <ContainerFeed data-test="post">
+                    <TextTimeline data-test="hashtag-title">#{hashtag}</TextTimeline>
                     {loading ? (
                         <LoadingContainer>
                             <RotatingLines
@@ -63,7 +63,7 @@ export default function HashtagPage() {
                         ))
                     )}
                 </ContainerFeed>
-                <ContainerHashtags>
+                <ContainerHashtags data-test="trending">
                     <Hashtags />
                 </ContainerHashtags>
             </ContainerContent>

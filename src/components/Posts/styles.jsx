@@ -11,7 +11,7 @@ export const ContainerPosts = styled.div`
     flex-shrink: 0;
     width: 100%;
     @media screen and (min-width: 768px) {
-        height: 276px;
+        height: auto;
         border-radius: 16px;
     }
 `;
