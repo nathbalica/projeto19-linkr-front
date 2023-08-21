@@ -15,6 +15,8 @@ import {
 } from "./styles"; // Importe o ContainerHashtags
 import Hashtags from "../../components/Hashtags/Hashtags";
 import useAuth from "../../hooks/useAuth";
+import SearchBar from "../../components/Header/SearchBar"
+import { styled } from "styled-components";
 
 export default function Timeline() {
     const [timeline, setTimeline] = useState([]);
@@ -28,7 +30,7 @@ export default function Timeline() {
 
     useEffect(() => {
         if (userAuth.token) {
-            async function getTimeline (){
+            async function getTimeline() {
                 apis.timeline(userAuth.token)
                     .then((data) => {
                         setTimeline(data);
@@ -67,6 +69,9 @@ export default function Timeline() {
             <Header />
             <ContainerContent>
                 <ContainerFeed>
+                    <SearchContainer>
+                        <SearchBar token={userAuth.token} />
+                    </SearchContainer>
                     <TextTimeline>timeline</TextTimeline>
                     <Publication updatePosts={updatePosts} />
                     {loading ? (
@@ -106,3 +111,12 @@ export default function Timeline() {
         </ContainerTimeline>
     );
 }
+
+const SearchContainer = styled.div`
+@media screen and (max-width: 767px) {
+  width: 350px;
+}
+@media screen and (min-width: 768px) {
+   display: none;
+}
+ `
