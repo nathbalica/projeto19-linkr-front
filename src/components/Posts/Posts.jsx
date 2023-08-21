@@ -149,7 +149,7 @@ export default function Posts({ post, updatePosts }) {
                 />
             )}
             <Perfil>
-                <Avatar src={post.profile_image} onClick={handleProfileClick}/>
+                <Avatar src={post.profile_image} onClick={handleProfileClick} />
                 {post.liked ? (
                     <HeartIconFull
                         onClick={() => toggleLike(post.id, post.liked)}
@@ -165,11 +165,19 @@ export default function Posts({ post, updatePosts }) {
             </Perfil>
             <Content>
                 <Title>
-                    <NameUser data-test="username" onClick={handleProfileClick}>{post.username}</NameUser>
+                    <NameUser data-test="username" onClick={handleProfileClick}>
+                        {post.username}
+                    </NameUser>
                     {post.owned && (
                         <PostButtons>
-                            <EditIcon onClick={toggleEdit} />
-                            <DeleteIcon onClick={clickDelete} />
+                            <EditIcon
+                                onClick={toggleEdit}
+                                data-test="edit-btn"
+                            />
+                            <DeleteIcon
+                                onClick={clickDelete}
+                                data-test="delete-btn"
+                            />
                         </PostButtons>
                     )}
                 </Title>
@@ -180,6 +188,7 @@ export default function Posts({ post, updatePosts }) {
                             onChange={handleContentChange}
                             cols={50}
                             onKeyDown={pressEnter}
+                            data-test="edit-input"
                             autoFocus
                         />
                     </EditBoxContainer>
@@ -200,7 +209,7 @@ export default function Posts({ post, updatePosts }) {
                         />
                     </LoadingContainer>
                 ) : (
-                    <LinkPost>
+                    <LinkPost data-test="link">
                         {metaData && (
                             <a
                                 href={metaData.url}

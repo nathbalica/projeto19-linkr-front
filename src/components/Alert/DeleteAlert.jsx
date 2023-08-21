@@ -23,10 +23,18 @@ const DeleteAlert = ({ closeAlert, token, post_id, updatePosts }) => {
                     Are you sure you want to delete this post?
                 </div>
                 <div className="buttons">
-                    <button className="no" onClick={closeAlert}>
+                    <button
+                        className="no"
+                        onClick={closeAlert}
+                        data-test="cancel"
+                    >
                         No, go back
                     </button>
-                    <button className="yes" onClick={sendRequest}>
+                    <button
+                        className="yes"
+                        onClick={sendRequest}
+                        data-test="confirm"
+                    >
                         Yes, delete it
                     </button>
                 </div>
