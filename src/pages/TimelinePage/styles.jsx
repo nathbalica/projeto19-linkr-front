@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 export const ContainerTimeline = styled.div`
     min-height: 100vh;
     padding-bottom: 20px;
+    background-color: #333;
 `;
 
 export const ContainerFeed = styled.div`
@@ -49,5 +50,18 @@ export const ContainerHashtags = styled.div`
         justify-content: center;
         align-items: flex-start;
         margin-top: 115px;
+    }
+`;
+
+export const LoadingContainer = styled.div`
+    padding-top: 100px;
+    margin-left: 165px;
+    @media screen and (min-width: 768px) {
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        margin-left: 130px;
+        width: 100%;
+        height: 100%; /* Set the height to 100% to ensure vertical centering */
     }
 `;

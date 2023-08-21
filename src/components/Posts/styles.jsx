@@ -75,7 +75,6 @@ export const NameUser = styled.h2`
 `;
 
 export const PostDescription = styled.p`
-    width: 100%;
     margin-top: 10px;
     color: #b7b7b7;
     font-family: Lato;
@@ -84,15 +83,85 @@ export const PostDescription = styled.p`
     font-weight: 400;
     line-height: normal;
 `;
+export const Articles = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+export const MetaDataInfos = styled.div`
+    padding-left: 10px;
+    padding-right: 10px;
+    flex: 1;
+    color: #fff;
+    h2 {
+        color: #cecece;
+        font-family: Lato;
+        font-size: 11px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-bottom: 5px;
+    }
+    h3 {
+        color: #9b9595;
+        font-family: Lato;
+        font-size: 9px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-bottom: 5px;
+    }
+    p {
+        color: #cecece;
+        font-family: Lato;
+        font-size: 9px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-bottom: 5px;
+    }
+    @media screen and (min-width: 768px) {
+        h2 {
+            font-size: 16px;
+        }
+        h3 {
+            font-size: 11px;
+        }
+        p {
+            font-size: 11px;
+        }
+    }
+`;
+
+export const MetaDataImage = styled.div`
+    width: 95px;
+    height: 115px;
+    margin: 0;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0px 13px 13px 0px;
+        flex-shrink: 0;
+    }
+    @media screen and (min-width: 768px) {
+        min-height: 153px;
+    }
+`;
 
 export const LinkPost = styled.div`
     margin-top: 10px;
+    margin-bottom: 10px;
     width: 100%;
-    height: 115px;
-    background: blue;
-    border-radius: 11px;
+    min-height: 115px;
+    border-radius: 13px;
     border: 1px solid #4d4d4d;
-    background: rgba(196, 196, 196, 0);
+    cursor: pointer;
+    @media screen and (min-width: 768px) {
+        min-height: 155px;
+    }
 `;
 
 export const Avatar = styled.img`
@@ -141,4 +210,20 @@ export const TextAreaContent = styled.textarea`
     font-style: normal;
     font-weight: 300;
     line-height: normal;
+`;
+TextAreaContent.defaultProps = {
+    id: "edit-textarea",
+};
+
+export const LoadingContainer = styled.div`
+    padding-top: 10px;
+    margin-left: 100px;
+    @media screen and (min-width: 768px) {
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        margin-left: 130px;
+        width: 100%;
+        height: 100%; /* Set the height to 100% to ensure vertical centering */
+    }
 `;

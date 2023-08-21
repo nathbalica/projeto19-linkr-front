@@ -1,7 +1,6 @@
-import { Helmet } from "react-helmet-async";
 import apis from "../../services/apis";
 import DeleteAlert from "../Alert/DeleteAlert";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     ContainerPosts,
     EditBoxContainer,
@@ -19,13 +18,48 @@ import {
     DeleteIcon,
     EditIcon,
     TextAreaContent,
-} from "./style";
+    LoadingContainer,
+    Articles,
+    MetaDataInfos,
+    MetaDataImage,
+} from "./styles";
+import { RotatingLines } from "react-loader-spinner";
 
 export default function Posts({ post, updatePosts }) {
-    console.log(post);
+    const [metaData, setMetaData] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [editedContent, setEditedContent] = useState("");
+
+    const token = localStorage.getItem("userAuth")
+        ? JSON.parse(localStorage.getItem("userAuth")).token
+        : null;
+
+    useEffect(() => {
+        if (post.link) {
+            setLoading(true);
+            apis.getMetaData(post.link)
+                .then((res) => {
+                    if (res) {
+                        setMetaData({
+                            title: res.title || "",
+                            description: res.description || "",
+                            images:
+                                res.images && res.images.length > 0
+                                    ? res.images[0]
+                                    : "",
+                            url: post.link,
+                        });
+                    }
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    setLoading(false);
+                });
+        }
+    }, [post.link]);
 
     const closeAlert = () => {
         setShowAlert(false);
@@ -35,10 +69,6 @@ export default function Posts({ post, updatePosts }) {
         setShowAlert(true);
         return;
     }
-
-    const token = localStorage.getItem("userAuth")
-        ? JSON.parse(localStorage.getItem("userAuth")).token
-        : null;
 
     function toggleLike(id, liked) {
         if (token) {
@@ -88,6 +118,19 @@ export default function Posts({ post, updatePosts }) {
         }
     };
 
+    const pressEsc = (event) => {
+        if (event.key === "Escape") {
+            setIsEditOpen(false);
+            setEditedContent(post.content);
+        }
+    };
+    useEffect(() => {
+        document.addEventListener("keydown", pressEsc);
+        return () => {
+            document.removeEventListener("keydown", pressEsc);
+        };
+    }, []);
+
     return (
         <ContainerPosts data-test="post">
             {showAlert && (
@@ -123,7 +166,7 @@ export default function Posts({ post, updatePosts }) {
                         </PostButtons>
                     )}
                 </Title>
-                {isEditOpen && (
+                {isEditOpen ? (
                     <EditBoxContainer>
                         <TextAreaContent
                             value={editedContent}
@@ -133,12 +176,85 @@ export default function Posts({ post, updatePosts }) {
                             autoFocus
                         />
                     </EditBoxContainer>
+                ) : (
+                    <PostDescription data-test="description">
+                        {post.content}
+                    </PostDescription>
                 )}
-                <PostDescription data-test="description">
-                    {post.content}
-                </PostDescription>
 
-                <LinkPost data-test="link">{post.link}</LinkPost>
+                {loading ? (
+                    <LoadingContainer>
+                        <RotatingLines
+                            strokeColor="white"
+                            strokeWidth="5"
+                            animationDuration="0.75"
+                            width="48"
+                            visible={true}
+                        />
+                    </LoadingContainer>
+                ) : (
+                    <LinkPost>
+                        {metaData && (
+                            <a
+                                href={metaData.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <Articles>
+                                    <MetaDataInfos>
+                                        <h2>
+                                            {metaData.title.length >
+                                            (window.innerWidth >= 768
+                                                ? 114
+                                                : 70)
+                                                ? metaData.title.substring(
+                                                      0,
+                                                      window.innerWidth >= 768
+                                                          ? 114
+                                                          : 70
+                                                  ) + "..."
+                                                : metaData.title}
+                                        </h2>
+                                        <h3>
+                                            {metaData.description.length >
+                                            (window.innerWidth >= 768
+                                                ? 240
+                                                : 120)
+                                                ? metaData.description.substring(
+                                                      0,
+                                                      window.innerWidth >= 768
+                                                          ? 240
+                                                          : 120
+                                                  ) + "..."
+                                                : metaData.description}
+                                        </h3>
+                                        <p>
+                                            {metaData.url.length >
+                                            (window.innerWidth >= 768
+                                                ? 200
+                                                : 80)
+                                                ? metaData.url.substring(
+                                                      0,
+                                                      window.innerWidth >= 768
+                                                          ? 200
+                                                          : 80
+                                                  ) + "..."
+                                                : metaData.url}
+                                        </p>
+                                    </MetaDataInfos>
+                                    {metaData.images && (
+                                        <MetaDataImage>
+                                            <img
+                                                alt="a"
+                                                src={metaData.images}
+                                            />
+                                        </MetaDataImage>
+                                    )}
+                                </Articles>
+                            </a>
+                        )}
+                    </LinkPost>
+                )}
             </Content>
         </ContainerPosts>
     );

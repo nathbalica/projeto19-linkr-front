@@ -129,6 +129,17 @@ async function editPost(id, content, token) {
     }
 }
 
+async function getMetaData(url) {
+    try {
+        const response = await axios.get(
+            `https://jsonlink.io/api/extract?url=${url}`
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error("Erro ao buscar metadados");
+    }
+}
+
 const apis = {
     singIn,
     signUp,
@@ -140,6 +151,7 @@ const apis = {
     publish,
     deletePost,
     editPost,
+    getMetaData,
 };
 
 export default apis;

@@ -12,7 +12,7 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #333;
+    /* background-color: #333; */
   }
   html {
   box-sizing: border-box;
@@ -46,6 +46,6 @@ const GlobalStyle = createGlobalStyle`
         text-decoration: none;
         padding-top: 30px;
     }
-`
+`;
 
-export default GlobalStyle
+export default GlobalStyle;
