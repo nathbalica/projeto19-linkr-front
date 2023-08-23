@@ -1,6 +1,7 @@
 import apis from "../../services/apis";
 import DeleteAlert from "../Alert/DeleteAlert";
 import React, { useState, useEffect } from "react";
+import { HashtagLink } from "./styles";
 import {
     ContainerPosts,
     EditBoxContainer,
@@ -25,6 +26,8 @@ import {
 } from "./styles";
 import { RotatingLines } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
+import reactStringReplace from "react-string-replace";
+
 
 export default function Posts({ post, updatePosts }) {
     const [metaData, setMetaData] = useState(null);
@@ -138,6 +141,7 @@ export default function Posts({ post, updatePosts }) {
         };
     }, []);
 
+
     return (
         <ContainerPosts data-test="post">
             {showAlert && (
@@ -194,7 +198,11 @@ export default function Posts({ post, updatePosts }) {
                     </EditBoxContainer>
                 ) : (
                     <PostDescription data-test="description">
-                        {post.content}
+                        {reactStringReplace(post.content, /(#\w+)/g, (match, i) => (
+                            <span className="hashtag" key={i}>
+                            <HashtagLink to={`/hashtag/${match.slice(1)}`}>{match}</HashtagLink>
+                          </span>
+                        ))}
                     </PostDescription>
                 )}
 
@@ -220,41 +228,41 @@ export default function Posts({ post, updatePosts }) {
                                     <MetaDataInfos>
                                         <h2>
                                             {metaData.title.length >
-                                            (window.innerWidth >= 768
-                                                ? 114
-                                                : 70)
+                                                (window.innerWidth >= 768
+                                                    ? 114
+                                                    : 70)
                                                 ? metaData.title.substring(
-                                                      0,
-                                                      window.innerWidth >= 768
-                                                          ? 114
-                                                          : 70
-                                                  ) + "..."
+                                                    0,
+                                                    window.innerWidth >= 768
+                                                        ? 114
+                                                        : 70
+                                                ) + "..."
                                                 : metaData.title}
                                         </h2>
                                         <h3>
                                             {metaData.description.length >
-                                            (window.innerWidth >= 768
-                                                ? 240
-                                                : 120)
+                                                (window.innerWidth >= 768
+                                                    ? 240
+                                                    : 120)
                                                 ? metaData.description.substring(
-                                                      0,
-                                                      window.innerWidth >= 768
-                                                          ? 240
-                                                          : 120
-                                                  ) + "..."
+                                                    0,
+                                                    window.innerWidth >= 768
+                                                        ? 240
+                                                        : 120
+                                                ) + "..."
                                                 : metaData.description}
                                         </h3>
                                         <p>
                                             {metaData.url.length >
-                                            (window.innerWidth >= 768
-                                                ? 200
-                                                : 80)
+                                                (window.innerWidth >= 768
+                                                    ? 200
+                                                    : 80)
                                                 ? metaData.url.substring(
-                                                      0,
-                                                      window.innerWidth >= 768
-                                                          ? 200
-                                                          : 80
-                                                  ) + "..."
+                                                    0,
+                                                    window.innerWidth >= 768
+                                                        ? 200
+                                                        : 80
+                                                ) + "..."
                                                 : metaData.url}
                                         </p>
                                     </MetaDataInfos>

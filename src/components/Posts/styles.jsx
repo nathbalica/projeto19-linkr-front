@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { IoHeartOutline, IoHeart, IoTrash } from "react-icons/io5";
 import { BsPencilFill } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 export const ContainerPosts = styled.div`
     height: auto;
@@ -82,7 +83,18 @@ export const PostDescription = styled.p`
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    .hashtag {
+        font-weight: bold;
+    /* Outros estilos que você deseja aplicar */
+    }
 `;
+
+export const HashtagLink = styled(Link)`
+  color: white;
+  text-decoration: none; /* Optional: Remove underline for the link */
+`;
+
+
 export const Articles = styled.div`
     display: flex;
     align-items: center;
