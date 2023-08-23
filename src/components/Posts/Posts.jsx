@@ -1,13 +1,17 @@
 import apis from "../../services/apis";
 import DeleteAlert from "../Alert/DeleteAlert";
+import CommentSection from "../Comments/CommentSection";
 import React, { useState, useEffect } from "react";
 import {
+    Body,
     ContainerPosts,
     EditBoxContainer,
     Perfil,
     HeartIconOutline,
     HeartIconFull,
     Likes,
+    CommentsCount,
+    CommentsIcon,
     Content,
     NameUser,
     PostDescription,
@@ -34,6 +38,8 @@ export default function Posts({ post, updatePosts }) {
     const [showAlert, setShowAlert] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [editedContent, setEditedContent] = useState("");
+    
+    const [showComments, setShowComments] = useState(false);
 
     const token = localStorage.getItem("userAuth")
         ? JSON.parse(localStorage.getItem("userAuth")).token
@@ -98,6 +104,10 @@ export default function Posts({ post, updatePosts }) {
         }
     };
 
+    const toggleComments = async (post_id) => {
+        setShowComments(!showComments);
+    }
+
     const handleContentChange = (event) => {
         setEditedContent(event.target.value);
     };
@@ -139,139 +149,152 @@ export default function Posts({ post, updatePosts }) {
     }, []);
 
     return (
-        <ContainerPosts data-test="post">
-            {showAlert && (
-                <DeleteAlert
-                    closeAlert={closeAlert}
-                    token={token}
+        <Body>
+            <ContainerPosts data-test="post">
+                {showAlert && (
+                    <DeleteAlert
+                        closeAlert={closeAlert}
+                        token={token}
+                        post_id={post.id}
+                        updatePosts={updatePosts}
+                    />
+                )}
+                <Perfil>
+                    <Avatar src={post.profile_image} onClick={handleProfileClick} />
+                    {post.liked ? (
+                        <HeartIconFull
+                            onClick={() => toggleLike(post.id, post.liked)}
+                        />
+                    ) : (
+                        <HeartIconOutline
+                            onClick={() => toggleLike(post.id, post.liked)}
+                        />
+                    )}
+                    <Likes>
+                        {post.like_count} {post.like_count == 1 ? "like" : "likes"}
+                    </Likes>
+                    <CommentsIcon onClick={() => toggleComments(post.id)}/>
+                    <CommentsCount>
+                        {post.comments_count} {post.comments_count == 1 ? "comment" : "comments"}
+                    </CommentsCount>
+                </Perfil>
+                <Content>
+                    <Title>
+                        <NameUser data-test="username" onClick={handleProfileClick}>
+                            {post.username}
+                        </NameUser>
+                        {post.owned && (
+                            <PostButtons>
+                                <EditIcon
+                                    onClick={toggleEdit}
+                                    data-test="edit-btn"
+                                />
+                                <DeleteIcon
+                                    onClick={clickDelete}
+                                    data-test="delete-btn"
+                                />
+                            </PostButtons>
+                        )}
+                    </Title>
+                    {isEditOpen ? (
+                        <EditBoxContainer>
+                            <TextAreaContent
+                                value={editedContent}
+                                onChange={handleContentChange}
+                                cols={50}
+                                onKeyDown={pressEnter}
+                                data-test="edit-input"
+                                autoFocus
+                            />
+                        </EditBoxContainer>
+                    ) : (
+                        <PostDescription data-test="description">
+                            {post.content}
+                        </PostDescription>
+                    )}
+
+                    {loading ? (
+                        <LoadingContainer>
+                            <RotatingLines
+                                strokeColor="white"
+                                strokeWidth="5"
+                                animationDuration="0.75"
+                                width="48"
+                                visible={true}
+                            />
+                        </LoadingContainer>
+                    ) : (
+                        <LinkPost data-test="link">
+                            {metaData && (
+                                <a
+                                    href={metaData.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <Articles>
+                                        <MetaDataInfos>
+                                            <h2>
+                                                {metaData.title.length >
+                                                (window.innerWidth >= 768
+                                                    ? 114
+                                                    : 70)
+                                                    ? metaData.title.substring(
+                                                        0,
+                                                        window.innerWidth >= 768
+                                                            ? 114
+                                                            : 70
+                                                    ) + "..."
+                                                    : metaData.title}
+                                            </h2>
+                                            <h3>
+                                                {metaData.description.length >
+                                                (window.innerWidth >= 768
+                                                    ? 240
+                                                    : 120)
+                                                    ? metaData.description.substring(
+                                                        0,
+                                                        window.innerWidth >= 768
+                                                            ? 240
+                                                            : 120
+                                                    ) + "..."
+                                                    : metaData.description}
+                                            </h3>
+                                            <p>
+                                                {metaData.url.length >
+                                                (window.innerWidth >= 768
+                                                    ? 200
+                                                    : 80)
+                                                    ? metaData.url.substring(
+                                                        0,
+                                                        window.innerWidth >= 768
+                                                            ? 200
+                                                            : 80
+                                                    ) + "..."
+                                                    : metaData.url}
+                                            </p>
+                                        </MetaDataInfos>
+                                        {metaData.images && (
+                                            <MetaDataImage>
+                                                <img
+                                                    alt="a"
+                                                    src={metaData.images}
+                                                />
+                                            </MetaDataImage>
+                                        )}
+                                    </Articles>
+                                </a>
+                            )}
+                        </LinkPost>
+                    )}
+                </Content>
+            </ContainerPosts>
+            {showComments && (
+                <CommentSection 
                     post_id={post.id}
-                    updatePosts={updatePosts}
+                    token={token}
+                    handleProfileClick={handleProfileClick}
                 />
             )}
-            <Perfil>
-                <Avatar src={post.profile_image} onClick={handleProfileClick} />
-                {post.liked ? (
-                    <HeartIconFull
-                        onClick={() => toggleLike(post.id, post.liked)}
-                    />
-                ) : (
-                    <HeartIconOutline
-                        onClick={() => toggleLike(post.id, post.liked)}
-                    />
-                )}
-                <Likes>
-                    {post.like_count} {post.like_count === 1 ? "like" : "likes"}
-                </Likes>
-            </Perfil>
-            <Content>
-                <Title>
-                    <NameUser data-test="username" onClick={handleProfileClick}>
-                        {post.username}
-                    </NameUser>
-                    {post.owned && (
-                        <PostButtons>
-                            <EditIcon
-                                onClick={toggleEdit}
-                                data-test="edit-btn"
-                            />
-                            <DeleteIcon
-                                onClick={clickDelete}
-                                data-test="delete-btn"
-                            />
-                        </PostButtons>
-                    )}
-                </Title>
-                {isEditOpen ? (
-                    <EditBoxContainer>
-                        <TextAreaContent
-                            value={editedContent}
-                            onChange={handleContentChange}
-                            cols={50}
-                            onKeyDown={pressEnter}
-                            data-test="edit-input"
-                            autoFocus
-                        />
-                    </EditBoxContainer>
-                ) : (
-                    <PostDescription data-test="description">
-                        {post.content}
-                    </PostDescription>
-                )}
-
-                {loading ? (
-                    <LoadingContainer>
-                        <RotatingLines
-                            strokeColor="white"
-                            strokeWidth="5"
-                            animationDuration="0.75"
-                            width="48"
-                            visible={true}
-                        />
-                    </LoadingContainer>
-                ) : (
-                    <LinkPost data-test="link">
-                        {metaData && (
-                            <a
-                                href={metaData.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Articles>
-                                    <MetaDataInfos>
-                                        <h2>
-                                            {metaData.title.length >
-                                            (window.innerWidth >= 768
-                                                ? 114
-                                                : 70)
-                                                ? metaData.title.substring(
-                                                      0,
-                                                      window.innerWidth >= 768
-                                                          ? 114
-                                                          : 70
-                                                  ) + "..."
-                                                : metaData.title}
-                                        </h2>
-                                        <h3>
-                                            {metaData.description.length >
-                                            (window.innerWidth >= 768
-                                                ? 240
-                                                : 120)
-                                                ? metaData.description.substring(
-                                                      0,
-                                                      window.innerWidth >= 768
-                                                          ? 240
-                                                          : 120
-                                                  ) + "..."
-                                                : metaData.description}
-                                        </h3>
-                                        <p>
-                                            {metaData.url.length >
-                                            (window.innerWidth >= 768
-                                                ? 200
-                                                : 80)
-                                                ? metaData.url.substring(
-                                                      0,
-                                                      window.innerWidth >= 768
-                                                          ? 200
-                                                          : 80
-                                                  ) + "..."
-                                                : metaData.url}
-                                        </p>
-                                    </MetaDataInfos>
-                                    {metaData.images && (
-                                        <MetaDataImage>
-                                            <img
-                                                alt="a"
-                                                src={metaData.images}
-                                            />
-                                        </MetaDataImage>
-                                    )}
-                                </Articles>
-                            </a>
-                        )}
-                    </LinkPost>
-                )}
-            </Content>
-        </ContainerPosts>
+        </Body>
     );
 }
