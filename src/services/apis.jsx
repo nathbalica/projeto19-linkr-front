@@ -221,6 +221,22 @@ async function isFollowingUser(userId, token) {
     }
 }
 
+async function newPostsCount(token, body) {
+    const config = configToken(token);
+    try {
+        const res = await axios.post(
+            `${process.env.REACT_APP_API_URL}/getNewPostsSince`,
+            body, // Enviando o timestamp aqui.
+            config
+        );
+        console.log(res)
+        return res;  // Certifique-se de que o backend retorna a contagem com a chave "count"
+    } catch (error) {
+        console.error("Erro ao verificar novos posts:", error);
+        throw error;
+    }
+}
+
 
 
 const apis = {
@@ -240,7 +256,8 @@ const apis = {
     editPost,
     followUser,
     unfollowUser,
-    isFollowingUser
+    isFollowingUser,
+    newPostsCount
 };
 
 export default apis;
