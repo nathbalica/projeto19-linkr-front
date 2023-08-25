@@ -18,11 +18,13 @@ export const ContainerPosts = styled.div`
 `;
 
 export const EditBoxContainer = styled.div`
-    background-color: white;
-    color: #333333;
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 10px;
+    @media screen and (min-width: 768px) {
+        background-color: white;
+        color: #333333;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
 `;
 
 export const Perfil = styled.div`
@@ -166,13 +168,14 @@ export const MetaDataImage = styled.div`
 export const LinkPost = styled.div`
     margin-top: 10px;
     margin-bottom: 10px;
-    width: 100%;
+    width: 278px;
     min-height: 115px;
     border-radius: 13px;
     border: 1px solid #4d4d4d;
     cursor: pointer;
     @media screen and (min-width: 768px) {
         min-height: 155px;
+        width: 100%;
     }
 `;
 

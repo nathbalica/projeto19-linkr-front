@@ -176,6 +176,51 @@ async function searchUsers(query, token) {
     }
 }
 
+async function followUser(userId, token) {
+    const config = configToken(token);
+    try {
+        const res = await axios.post(
+            `${process.env.REACT_APP_API_URL}/follow/${userId}`,
+            {},
+            config
+        );
+        console.log(res.data)
+        return res.data;
+    } catch (error) {
+        console.error("Erro ao seguir usuário:", error);
+        throw error;
+    }
+}
+
+async function unfollowUser(userId, token) {
+    const config = configToken(token);
+    try {
+        const res = await axios.post(
+            `${process.env.REACT_APP_API_URL}/unfollow/${userId}`,
+            {},
+            config
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Erro ao deseguir usuário:", error);
+        throw error;
+    }
+}
+
+async function isFollowingUser(userId, token) {
+    const config = configToken(token);
+    try {
+        const res = await axios.get(
+            `${process.env.REACT_APP_API_URL}/is-following/${userId}`,
+            config
+        );
+        return res.data.isFollowing;
+    } catch (error) {
+        console.error("Erro ao verificar status de seguimento:", error);
+        throw error;
+    }
+}
+
 
 
 const apis = {
@@ -193,6 +238,9 @@ const apis = {
     publish,
     deletePost,
     editPost,
+    followUser,
+    unfollowUser,
+    isFollowingUser
 };
 
 export default apis;

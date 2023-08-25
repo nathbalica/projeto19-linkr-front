@@ -113,8 +113,10 @@ export default function Timeline() {
 }
 
 const SearchContainer = styled.div`
+
 @media screen and (max-width: 767px) {
-  width: 350px;
+  width: 100%;
+  padding: 10px;
 }
 @media screen and (min-width: 768px) {
    display: none;
