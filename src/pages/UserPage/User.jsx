@@ -16,26 +16,32 @@ export default function UserProfile() {
     const { user_id } = useParams();
     const {userAuth } = useAuth()
     
-
-
+    async function getUserData(){
+        setLoading(true);
+        apis.getUser(user_id, userAuth.token)
+            .then((res) => {
+                const { username, profile_image, posts } = res.data;
+                setUserData({ username, profile_image });
+                setUserPosts(posts);
+                setLoading(false);
+            })
+            .catch((error) => {
+                setError("An error occurred while fetching user data.");
+                setLoading(false);
+            });
+    };
 
     useEffect(() => {
-        async function getUserData(){
-            setLoading(true);
-            apis.getUser(user_id, userAuth.token)
-                .then((res) => {
-                    const { username, profile_image, posts } = res.data;
-                    setUserData({ username, profile_image });
-                    setUserPosts(posts); // Update userPosts state
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    setError("An error occurred while fetching user data.");
-                    setLoading(false);
-                });
-        };
         getUserData()
     }, [user_id, userAuth.token]);
+
+    const updatePosts = () => {
+        if(loading) {
+            return;
+        }
+        setLoading(true);
+        getUserData();
+    };
 
     return (
         <ContainerTimeline>
@@ -59,7 +65,11 @@ export default function UserProfile() {
                         <NoPostsMessage>No posts for this user...</NoPostsMessage>
                     ) : (
                         userPosts.map((post, index) => (
-                            <Posts key={index} post={post} />
+                            <Posts
+                                key={index}
+                                post={post}
+                                updatePosts={updatePosts}
+                            />
                         ))
                     )}
                 </ContainerFeed>
