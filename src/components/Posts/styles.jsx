@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { IoHeartOutline, IoHeart, IoTrash, IoChatbubblesOutline } from "react-icons/io5";
+import { BiRepost } from "react-icons/bi";
 import { BsPencilFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
@@ -62,7 +63,7 @@ export const Likes = styled.p`
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    margin-top: 8px;
+    margin-top: 4px;
 `;
 
 export const CommentsIcon = styled(IoChatbubblesOutline)`
@@ -80,11 +81,52 @@ export const CommentsCount = styled.p`
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    margin-top: 8px;
+    margin-top: 4px;
     padding-left: 2px;
     margin-left: -2px;
     width: 62px;
 `;
+
+export const RepostBar = styled.div`
+    font-family: Lato;
+    font-size: 11px;
+    background-color: #1e1e1e;
+    padding: 0px 10px 10px 10px;
+    margin-bottom: -15px;
+    border-radius: 16px 16px 0 0;
+    width: 100%;
+    display: flex;
+    z-index: 1;
+    align-items: center;
+    color: white;
+`
+
+export const RepostBarIcon = styled(BiRepost)`
+    color: white;
+    margin: 8px 3px 8px 0;
+    font-size: 22px;
+`
+
+export const ShareCount = styled.p`
+    color: #fff;
+    text-align: center;
+    font-family: Lato;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin-top: 4px;
+    padding-left: 2px;
+    margin-left: -2px;
+    width: 62px;
+`;
+
+export const ShareIcon = styled(BiRepost)`
+    color: white;
+    margin-top: 15px;
+    font-size: 22px;
+    cursor: pointer;
+`
 
 export const Content = styled.div`
     display: flex;
@@ -212,6 +254,10 @@ export const Avatar = styled.img`
     border-radius: 50%;
     background-color: #ffffff; /* Cor de fundo caso a imagem tenha áreas transparentes */
     object-fit: cover; /* Garante que a imagem preencha o círculo */
+    @media screen and (max-width: 768px) {
+        width: 40px;
+        height: 40px;
+    }
 `;
 
 export const Title = styled.div`

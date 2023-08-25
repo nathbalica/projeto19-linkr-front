@@ -2,17 +2,17 @@ import React from "react";
 import styled from "styled-components";
 import apis from "../../services/apis";
 
-const DeleteAlert = ({ closeDelete, token, post_id, updatePost }) => {
+const RepostAlert = ({ closeRepost, token, post_id, updatePost }) => {
     function sendRequest() {
         if (token) {
-            console.log(token, post_id);
-            apis.deletePost(post_id, token)
+            apis.sharePost(post_id, token)
                 .then(() => {
                     updatePost();
-                    closeDelete();
+                    closeRepost();
                 })
                 .catch((error) => {
-                    console.error("Não foi possível apagar post:", error);
+                    console.error("Não foi possível compartilhar post:", error);
+                    closeRepost();
                 });
         }
     }
@@ -20,22 +20,22 @@ const DeleteAlert = ({ closeDelete, token, post_id, updatePost }) => {
         <AlertContainer>
             <AlertBox>
                 <div className="text">
-                    Are you sure you want to delete this post?
+                    Do you want to re-post this link?
                 </div>
                 <div className="buttons">
                     <button
                         className="no"
-                        onClick={closeDelete}
+                        onClick={closeRepost}
                         data-test="cancel"
                     >
-                        No, go back
+                        No, cancel
                     </button>
                     <button
                         className="yes"
                         onClick={sendRequest}
                         data-test="confirm"
                     >
-                        Yes, delete it
+                        Yes, share!
                     </button>
                 </div>
             </AlertBox>
@@ -43,7 +43,7 @@ const DeleteAlert = ({ closeDelete, token, post_id, updatePost }) => {
     );
 };
 
-export default DeleteAlert;
+export default RepostAlert;
 
 const AlertContainer = styled.div`
     position: fixed;
@@ -55,7 +55,7 @@ const AlertContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 15;
+    z-index: 10;
 `;
 
 const AlertBox = styled.div`

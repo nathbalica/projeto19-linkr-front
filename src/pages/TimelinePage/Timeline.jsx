@@ -40,7 +40,7 @@ export default function Timeline() {
             const data = await apis.timeline(userAuth.token, page)
             setTimeline(data);
             setLoading(false);
-            console.log(timeline);
+            console.log(data);
         } catch (error) {
             console.error("Erro ao buscar timeline:", error);
             setLoading(false);
@@ -90,7 +90,6 @@ export default function Timeline() {
                             <Posts
                                 key={index}
                                 post={post}
-                                updatePosts={updatePosts}
                             />
                         ))
                     )}
@@ -104,12 +103,11 @@ export default function Timeline() {
 }
 
 const SearchContainer = styled.div`
-
-@media screen and (max-width: 767px) {
-  width: 100%;
-  padding: 10px;
-}
-@media screen and (min-width: 768px) {
-   display: none;
-}
+    @media screen and (max-width: 767px) {
+      width: 100%;
+      padding: 10px;
+    }
+    @media screen and (min-width: 768px) {
+       display: none;
+    }
  `

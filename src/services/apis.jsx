@@ -75,7 +75,7 @@ async function dislike(id, token) {
             `${process.env.REACT_APP_API_URL}/like/${id}`,
             config
         );
-        return res;
+        return res.data;
     } catch (error) {
         console.error("Erro ao descurtir post:", error);
         throw error;
@@ -250,7 +250,31 @@ async function postComment(post_id, token, content) {
         console.error("Erro ao enviar comentário:", error);
         throw error;
     }
+}
 
+async function sharePost(post_id, token) {
+    const config = configToken(token);
+    try {
+        await axios.post(
+            `${process.env.REACT_APP_API_URL}/repost/${post_id}`, {}, config
+        );
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+async function getPost(post_id, token) {
+    const config = configToken(token);
+    try {
+        const res = await axios.get(
+            `${process.env.REACT_APP_API_URL}/post/${post_id}`, config
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Erro ao buscar post:", error);
+        throw error;
+    }
 }
 
 const apis = {
@@ -272,7 +296,9 @@ const apis = {
     unfollowUser,
     isFollowingUser,
     fetchComments,
-    postComment
+    postComment,
+    sharePost,
+    getPost
 };
 
 export default apis;

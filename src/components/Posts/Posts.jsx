@@ -1,5 +1,6 @@
 import apis from "../../services/apis";
 import DeleteAlert from "../Alert/DeleteAlert";
+import RepostAlert from "../Alert/RepostAlert";
 import CommentSection from "../Comments/CommentSection";
 import React, { useState, useEffect } from "react";
 import { HashtagLink } from "./styles";
@@ -13,6 +14,10 @@ import {
     Likes,
     CommentsCount,
     CommentsIcon,
+    RepostBar,
+    RepostBarIcon,
+    ShareCount,
+    ShareIcon,
     Content,
     NameUser,
     PostDescription,
@@ -32,12 +37,14 @@ import { RotatingLines } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 
-export default function Posts({ post, updatePosts }) {
+export default function Posts({ post }) {
+    const [postData, setPostData] = useState(post);
     const [metaData, setMetaData] = useState(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const [showAlert, setShowAlert] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
+    const [showRepost, setShowRepost] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [editedContent, setEditedContent] = useState("");
     
@@ -48,13 +55,13 @@ export default function Posts({ post, updatePosts }) {
         : null;
 
     const handleProfileClick = () => {
-        navigate(`/user/${post.user_id}`); // Navigate to the user's profile
+        navigate(`/user/${postData.user_id}`); // Navigate to the user's profile
     };
 
     useEffect(() => {
-        if (post.link) {
+        if (postData.link) {
             setLoading(true);
-            apis.getMetaData(post.link)
+            apis.getMetaData(postData.link)
                 .then((res) => {
                     if (res) {
                         setMetaData({
@@ -64,7 +71,7 @@ export default function Posts({ post, updatePosts }) {
                                 res.images && res.images.length > 0
                                     ? res.images[0]
                                     : "",
-                            url: post.link,
+                            url: postData.link,
                         });
                     }
                     setLoading(false);
@@ -74,26 +81,49 @@ export default function Posts({ post, updatePosts }) {
                     setLoading(false);
                 });
         }
-    }, [post.link]);
+    }, [postData.link]);
 
-    const closeAlert = () => {
-        setShowAlert(false);
+    function closeDelete() {
+        setShowDelete(false);
         return;
     };
+
+    function closeRepost() {
+        setShowRepost(false);
+        return;
+    }
+
+    function clickRepost() {
+        setShowRepost(true);
+        return;
+    }
+
     function clickDelete() {
-        setShowAlert(true);
+        setShowDelete(true);
         return;
     }
 
     function toggleLike(id, liked) {
         if (token) {
             if (liked) {
-                apis.dislike(id, token).then(() => {
-                    updatePosts();
+                apis.dislike(id, token).then(newCount => {
+                    setPostData(prevData => ({
+                        ...prevData,
+                        like_count: newCount,
+                        liked: false
+                    }));
+                }).catch(error => {
+                    console.error("Error disliking post:", error);
                 });
             } else {
-                apis.like(id, token).then(() => {
-                    updatePosts();
+                apis.like(id, token).then(newCount => {
+                    setPostData(prevData => ({
+                        ...prevData,
+                        like_count: newCount,
+                        liked: true
+                    }));
+                }).catch(error => {
+                    console.error("Error liking post:", error);
                 });
             }
         }
@@ -102,7 +132,7 @@ export default function Posts({ post, updatePosts }) {
     const toggleEdit = () => {
         setIsEditOpen(!isEditOpen);
         if (!isEditOpen) {
-            setEditedContent(post.content);
+            setEditedContent(postData.content);
         }
     };
 
@@ -119,15 +149,34 @@ export default function Posts({ post, updatePosts }) {
             return;
         }
         if (token) {
-            apis.editPost(post.id, editedContent, token)
+            apis.editPost(postData.id, editedContent, token)
                 .then(() => {
                     setIsEditOpen(false);
-                    updatePosts();
+                    updatePost();
                 })
                 .catch((error) => {
                     console.error("Erro ao editar post:", error);
                 });
         }
+    };
+
+    const updatePost = async () => {
+        setLoading(true);
+        try { 
+            const data = await apis.getPost(postData.id, token)
+            const newData = {
+                repost: postData.repost,
+                repost_by_me: postData.repost_by_me,
+                created_at: postData.created_at,
+                ...data
+            }
+            setPostData(newData);
+            setLoading(false);
+            console.log(newData);
+        } catch (error) {
+            console.error("Erro ao buscar timeline:", error);
+            setLoading(false);
+        };
     };
 
     const pressEnter = (event) => {
@@ -140,7 +189,7 @@ export default function Posts({ post, updatePosts }) {
     const pressEsc = (event) => {
         if (event.key === "Escape") {
             setIsEditOpen(false);
-            setEditedContent(post.content);
+            setEditedContent(postData.content);
         }
     };
     useEffect(() => {
@@ -152,40 +201,65 @@ export default function Posts({ post, updatePosts }) {
 
     return (
         <Body>
+            {postData.repost && (
+                <RepostBar>
+                    <RepostBarIcon />
+                    <p>Re-posted by 
+                        <span style={{ fontWeight: "bold" }}>
+                            {'\u00A0'}{postData.repost_by_me ? "you" : postData.reposter_username}
+                        </span>
+                    </p>
+                </RepostBar>
+            )}
             <ContainerPosts data-test="post">
-                {showAlert && (
+                {showDelete && (
                     <DeleteAlert
-                        closeAlert={closeAlert}
+                        closeDelete={closeDelete}
                         token={token}
-                        post_id={post.id}
-                        updatePosts={updatePosts}
+                        post_id={postData.id}
+                        updatePost={updatePost}
+                    />
+                )}
+                {showRepost && (
+                    <RepostAlert
+                        closeRepost={closeRepost}
+                        token={token}
+                        post_id={postData.id}
+                        updatePost={updatePost}
                     />
                 )}
                 <Perfil>
-                    <Avatar src={post.profile_image} onClick={handleProfileClick} />
-                    {post.liked ? (
+                    <Avatar src={postData.profile_image} onClick={handleProfileClick} />
+                    {postData.liked ? (
                         <HeartIconFull
-                            onClick={() => toggleLike(post.id, post.liked)}
+                            onClick={() => toggleLike(postData.id, postData.liked)}
                         />
                     ) : (
                         <HeartIconOutline
-                            onClick={() => toggleLike(post.id, post.liked)}
+                            onClick={() => toggleLike(postData.id, postData.liked)}
                         />
                     )}
                     <Likes>
-                        {post.like_count} {post.like_count == 1 ? "like" : "likes"}
+                        {postData.like_count} {postData.like_count == 1 ? "like" : "likes"}
                     </Likes>
-                    <CommentsIcon onClick={() => toggleComments(post.id)}/>
+                    <CommentsIcon onClick={() => toggleComments(postData.id)}/>
                     <CommentsCount>
-                        {post.comments_count} {post.comments_count == 1 ? "comment" : "comments"}
+                        {postData.comments_count} {postData.comments_count == 1 ? "comment" : "comments"}
                     </CommentsCount>
+                    <ShareIcon 
+                        onClick={clickRepost}
+                        data-test="repost-btn"
+                    />
+                    <ShareCount>
+                        {postData.repost_count} {postData.repost_count == 1 ? "re-post" : "re-posts"}
+                    </ShareCount>
                 </Perfil>
                 <Content>
                     <Title>
                         <NameUser data-test="username" onClick={handleProfileClick}>
-                            {post.username}
+                            {postData.username}
                         </NameUser>
-                        {post.owned && (
+                        {postData.owned && (
                             <PostButtons>
                                 <EditIcon
                                     onClick={toggleEdit}
@@ -211,7 +285,7 @@ export default function Posts({ post, updatePosts }) {
                         </EditBoxContainer>
                     ) : (
                         <PostDescription data-test="description">
-                            {reactStringReplace(post.content, /(#\w+)/g, (match, i) => (
+                            {reactStringReplace(postData.content, /(#\w+)/g, (match, i) => (
                                 <span className="hashtag" key={i}>
                                 <HashtagLink to={`/hashtag/${match.slice(1)}`}>{match}</HashtagLink>
                             </span>
@@ -296,7 +370,7 @@ export default function Posts({ post, updatePosts }) {
             </ContainerPosts>
             {showComments && (
                 <CommentSection 
-                    post_id={post.id}
+                    post_id={postData.id}
                     token={token}
                     handleProfileClick={handleProfileClick}
                 />

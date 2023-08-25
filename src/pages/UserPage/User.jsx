@@ -22,6 +22,7 @@ export default function UserProfile() {
 
     const isOwnProfile = userAuth.id === Number(user_id);
 
+
     useEffect(() => {
         async function getUserData() {
             setLoading(true);
@@ -113,14 +114,12 @@ export default function UserProfile() {
                             <Posts
                                 key={index}
                                 post={post}
-                                updatePosts={updatePosts}
                             />
                         ))
                     )}
                 </ContainerFeed>
-
                 <UserFollow hasButton={!isOwnProfile}>
-                    {!isOwnProfile && (
+                    {!isOwnProfile && (   // Adicionar esta condição
                         <FollowButton
                             $isFollowing={isFollowing}
                             onClick={handleFollowToggle}
@@ -145,7 +144,6 @@ const UserFollow = styled.div`
         align-items: flex-end;
         padding-top: ${props => props.hasButton ? "61px" : "134px"};
     }
-
 `
 const ContainerUser = styled.div`
     display: flex;
