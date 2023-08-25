@@ -23,6 +23,7 @@ export default function UserProfile() {
                 const { username, profile_image, posts } = res.data;
                 setUserData({ username, profile_image });
                 setUserPosts(posts);
+                console.log(posts);
                 setLoading(false);
             })
             .catch((error) => {
@@ -68,7 +69,6 @@ export default function UserProfile() {
                             <Posts
                                 key={index}
                                 post={post}
-                                updatePosts={updatePosts}
                             />
                         ))
                     )}
