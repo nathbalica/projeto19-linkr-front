@@ -24,6 +24,7 @@ export const TextTimeline = styled.h1`
     line-height: normal;
     @media screen and (min-width: 768px) {
         text-align: left;
+        margin-bottom: 20px;
     }
 `;
 
@@ -35,6 +36,7 @@ export const NoPostsMessage = styled.p`
 `;
 
 export const ContainerContent = styled.div`
+    width: 100%;
     @media screen and (min-width: 768px) {
         display: flex;
         justify-content: center;
@@ -49,7 +51,7 @@ export const ContainerHashtags = styled.div`
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        margin-top: 115px;
+        padding-top: 135px;
     }
 `;
 

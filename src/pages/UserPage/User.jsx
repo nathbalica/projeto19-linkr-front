@@ -3,10 +3,11 @@ import Posts from "../../components/Posts/Posts";
 import apis from "../../services/apis";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ContainerHashtags, ContainerTimeline, ContainerContent, ContainerFeed, TextTimeline, LoadingContainer, NoPostsMessage } from "../TimelinePage/styles";
+import { ContainerTimeline, ContainerContent, ContainerFeed, TextTimeline, LoadingContainer, NoPostsMessage } from "../TimelinePage/styles";
 import { RotatingLines } from "react-loader-spinner";
 import useAuth from "../../hooks/useAuth";
 import Hashtags from "../../components/Hashtags/Hashtags";
+import { styled } from "styled-components";
 
 export default function UserProfile() {
     const [userData, setUserData] = useState({});
@@ -14,7 +15,12 @@ export default function UserProfile() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const { user_id } = useParams();
-    const {userAuth } = useAuth()
+    const { userAuth } = useAuth()
+
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [followLoading, setFollowLoading] = useState(false);
+
+    const isOwnProfile = userAuth.id === Number(user_id);
     
     async function getUserData(){
         setLoading(true);
@@ -36,6 +42,41 @@ export default function UserProfile() {
         getUserData()
     }, [user_id, userAuth.token]);
 
+    useEffect(() => {
+        async function checkFollowingStatus() {
+            try {
+                const response = await apis.isFollowingUser(user_id, userAuth.token);
+                setIsFollowing(response);
+            } catch (error) {
+                console.error("Error checking follow status:", error);
+            }
+        }
+
+        checkFollowingStatus();
+    }, [user_id, userAuth.token]);
+
+    const handleFollowToggle = async () => {
+        setFollowLoading(true);
+        try {
+            if (isFollowing) {
+                await apis.unfollowUser(user_id, userAuth.token);
+            } else {
+                const response = await apis.followUser(user_id, userAuth.token);
+
+                if (response.status === 400) {
+                    alert(response.data.error); // Mostra mensagem de erro do backend.
+                    setFollowLoading(false);
+                    return;
+                }
+            }
+            setIsFollowing(!isFollowing);
+        } catch (error) {
+            alert('Não foi possível executar a operação.');
+        } finally {
+            setFollowLoading(false);
+        }
+    }
+
     const updatePosts = () => {
         if(loading) {
             return;
@@ -49,7 +90,9 @@ export default function UserProfile() {
             <Header />
             <ContainerContent>
                 <ContainerFeed>
-                    <TextTimeline>{userData.username}'s posts</TextTimeline>
+                    <ContainerUser>
+                        <TextTimeline>{userData.username}'s posts</TextTimeline>
+                    </ContainerUser>
                     {loading ? (
                         <LoadingContainer>
                             <RotatingLines
@@ -73,12 +116,64 @@ export default function UserProfile() {
                         ))
                     )}
                 </ContainerFeed>
-                <ContainerHashtags>
+                <UserFollow hasButton={!isOwnProfile}>
+
+                    {!isOwnProfile && (   // Adicionar esta condição
+                        <FollowButton
+                            $isFollowing={isFollowing}
+                            onClick={handleFollowToggle}
+                            disabled={followLoading}
+                        >
+                            {isFollowing ? "Unfollow" : "Follow"}
+                        </FollowButton>
+                    )}
                     <Hashtags />
-                </ContainerHashtags>
+                </UserFollow>
             </ContainerContent>
         </ContainerTimeline>
     );
 }
 
+const UserFollow = styled.div`
+    display: none;
+    @media screen and (min-width: 768px) {
+        min-height: 406px; /* Pode ajustar conforme necessário */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        padding-top: ${props => props.hasButton ? "61px" : "134px"};
+    }
+`
+const ContainerUser = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`
 
+const FollowButton = styled.button`
+@media screen and (max-width: 768px) {
+    display: none;
+}
+@media screen and (min-width: 768px) {
+    width: 112px;
+    height: 31px;
+    background-color: ${props => props.$isFollowing ? "#FFF" : "#1877F2"};
+    color: ${props => props.$isFollowing ? "#1877F2" : "#FFF"};
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    &:hover {
+        background-color: ${props => props.$isFollowing ? "#E6E6E6" : "#1458B2"};
+        color: ${props => props.$isFollowing ? "#1458B2" : "#FFF"};
+    }
+    &:disabled {
+        background-color: #B0B0B0; /* Cinza para estado desabilitado */
+        cursor: not-allowed;
+    }
+    margin-bottom: 42px;
+}
+    
+`;
