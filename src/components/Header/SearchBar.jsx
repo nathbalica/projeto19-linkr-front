@@ -72,9 +72,8 @@ export default function SearchBar({token}) {
 const SearchInput = styled(DebounceInput)`
 @media screen and (max-width: 768px) {
   width: 100%;
-  margin-left: 10px;
   border-radius: 10px;
-  height: 35px;
+  height: 45px;
 }
  @media screen and (min-width: 768px) {
 

@@ -1,13 +1,13 @@
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
 import Posts from "../../components/Posts/Posts";
 import apis from "../../services/apis";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { ContainerTimeline, ContainerContent, ContainerFeed, TextTimeline, LoadingContainer, NoPostsMessage } from "../TimelinePage/styles";
 import { RotatingLines } from "react-loader-spinner";
 import useAuth from "../../hooks/useAuth";
 import Hashtags from "../../components/Hashtags/Hashtags";
 import { styled } from "styled-components";
+import { useParams } from "react-router-dom";
 
 export default function UserProfile() {
     const [userData, setUserData] = useState({});
@@ -21,25 +21,22 @@ export default function UserProfile() {
     const [followLoading, setFollowLoading] = useState(false);
 
     const isOwnProfile = userAuth.id === Number(user_id);
-    
-    async function getUserData(){
-        setLoading(true);
-        apis.getUser(user_id, userAuth.token)
-            .then((res) => {
-                const { username, profile_image, posts } = res.data;
-                setUserData({ username, profile_image });
-                setUserPosts(posts);
-                console.log(posts);
-                setLoading(false);
-            })
-            .catch((error) => {
-                setError("An error occurred while fetching user data.");
-                setLoading(false);
-            });
-    };
+
 
     useEffect(() => {
-        getUserData()
+        async function getUserData() {
+            setLoading(true);
+            try {
+                const res = await apis.getUser(user_id, userAuth.token);
+                const { username, profile_image, posts } = res.data;
+                setUserData({ username, profile_image });
+                setUserPosts(posts); // Update userPosts state
+            } catch (error) {
+                setError("An error occurred while fetching user data.");
+            }
+            setLoading(false);
+        }
+        getUserData();
     }, [user_id, userAuth.token]);
 
     useEffect(() => {
@@ -75,14 +72,19 @@ export default function UserProfile() {
         } finally {
             setFollowLoading(false);
         }
-    }
+    };
 
-    const updatePosts = () => {
-        if(loading) {
-            return;
-        }
+    const updatePosts = async () => {
         setLoading(true);
-        getUserData();
+        try {
+            const res = await apis.getUser(user_id, userAuth.token);
+            const { username, profile_image, posts } = res.data;
+            setUserData({ username, profile_image });
+            setUserPosts(posts); // Update userPosts state
+        } catch (error) {
+            setError("An error occurred while fetching user data.");
+        }
+        setLoading(false);
     };
 
     return (
@@ -117,7 +119,6 @@ export default function UserProfile() {
                     )}
                 </ContainerFeed>
                 <UserFollow hasButton={!isOwnProfile}>
-
                     {!isOwnProfile && (   // Adicionar esta condição
                         <FollowButton
                             $isFollowing={isFollowing}
@@ -151,29 +152,30 @@ const ContainerUser = styled.div`
 `
 
 const FollowButton = styled.button`
-@media screen and (max-width: 768px) {
+    @media screen and (max-width: 768px) {
     display: none;
-}
-@media screen and (min-width: 768px) {
-    width: 112px;
-    height: 31px;
-    background-color: ${props => props.$isFollowing ? "#FFF" : "#1877F2"};
-    color: ${props => props.$isFollowing ? "#1877F2" : "#FFF"};
-    padding: 5px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    &:hover {
-        background-color: ${props => props.$isFollowing ? "#E6E6E6" : "#1458B2"};
-        color: ${props => props.$isFollowing ? "#1458B2" : "#FFF"};
     }
-    &:disabled {
-        background-color: #B0B0B0; /* Cinza para estado desabilitado */
-        cursor: not-allowed;
+    @media screen and (min-width: 768px) {
+        width: 112px;
+        height: 31px;
+        background-color: ${props => props.$isFollowing ? "#FFF" : "#1877F2"};
+        color: ${props => props.$isFollowing ? "#1877F2" : "#FFF"};
+        padding: 5px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: ${props => props.$isFollowing ? "#E6E6E6" : "#1458B2"};
+            color: ${props => props.$isFollowing ? "#1458B2" : "#FFF"};
+        }
+
+        &:disabled {
+            background-color: #B0B0B0; /* Cinza para estado desabilitado */
+            cursor: not-allowed;
+        }
+        margin-bottom: 42px;
     }
-    margin-bottom: 42px;
-}
-    
-`;
+`
