@@ -24,11 +24,11 @@ function logout(token) {
     return res;
 }
 
-async function timeline(token) {
+async function timeline(token, page) {
     const config = configToken(token);
     try {
         const res = await axios.get(
-            `${process.env.REACT_APP_API_URL}/timeline`,
+            `${process.env.REACT_APP_API_URL}/timeline/${page}`,
             config
         );
         return res.data;
@@ -130,17 +130,21 @@ async function editPost(id, content, token) {
 }
 
 async function getMetaData(url) {
-  try {
-      const response = await axios.get(`https://jsonlink.io/api/extract?url=${url}`);
-      return response.data;
-  } catch (error) {
-      throw new Error("Erro ao buscar metadados");
-  }
+    try {
+        const response = await axios.get(
+            `https://jsonlink.io/api/extract?url=${url}`
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error("Erro ao buscar metadados");
+    }
 }
 
 async function getHashtags(token) {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/trending`);
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/trending`
+        );
         return response.data;
     } catch (error) {
         throw new Error("Erro ao buscar metadados");
@@ -221,7 +225,33 @@ async function isFollowingUser(userId, token) {
     }
 }
 
+async function fetchComments(post_id, token) {
+    const config = configToken(token);
+    try {
+        const res = await axios.get(
+            `${process.env.REACT_APP_API_URL}/comments/${post_id}`, config
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Erro ao buscar comentários:", error);
+        throw error;
+    }
+}
 
+async function postComment(post_id, token, content) {
+    const config = configToken(token);
+    const body = { content: content };
+    try {
+        const res = await axios.post(
+            `${process.env.REACT_APP_API_URL}/comments/${post_id}`, body, config
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Erro ao enviar comentário:", error);
+        throw error;
+    }
+
+}
 
 const apis = {
     singIn,
@@ -240,7 +270,9 @@ const apis = {
     editPost,
     followUser,
     unfollowUser,
-    isFollowingUser
+    isFollowingUser,
+    fetchComments,
+    postComment
 };
 
 export default apis;

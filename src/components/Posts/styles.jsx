@@ -1,16 +1,22 @@
 import styled from "styled-components";
-import { IoHeartOutline, IoHeart, IoTrash } from "react-icons/io5";
+import { IoHeartOutline, IoHeart, IoTrash, IoChatbubblesOutline } from "react-icons/io5";
 import { BsPencilFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
+
+export const Body = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+`
 
 export const ContainerPosts = styled.div`
     height: auto;
     display: flex;
     background: #171717;
     padding: 15px;
-    margin-bottom: 20px;
     flex-shrink: 0;
     width: 100%;
+    z-index: 2;
     @media screen and (min-width: 768px) {
         height: auto;
         border-radius: 16px;
@@ -31,7 +37,7 @@ export const Perfil = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-right: 15px;
+    padding-right: 10px;
 `;
 
 export const HeartIconOutline = styled(IoHeartOutline)`
@@ -52,11 +58,32 @@ export const Likes = styled.p`
     color: #fff;
     text-align: center;
     font-family: Lato;
-    font-size: 9px;
+    font-size: 10px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     margin-top: 8px;
+`;
+
+export const CommentsIcon = styled(IoChatbubblesOutline)`
+    color: white;
+    margin-top: 15px;
+    font-size: 20px;
+    cursor: pointer;
+`
+
+export const CommentsCount = styled.p`
+    color: #fff;
+    text-align: center;
+    font-family: Lato;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin-top: 8px;
+    padding-left: 2px;
+    margin-left: -2px;
+    width: 62px;
 `;
 
 export const Content = styled.div`
@@ -180,8 +207,8 @@ export const LinkPost = styled.div`
 `;
 
 export const Avatar = styled.img`
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background-color: #ffffff; /* Cor de fundo caso a imagem tenha áreas transparentes */
     object-fit: cover; /* Garante que a imagem preencha o círculo */
@@ -218,7 +245,6 @@ export const TextAreaContent = styled.textarea`
     background: white;
     box-sizing: border-box;
     border: none;
-
     color: #333333;
     font-family: Lato;
     font-size: 15px;

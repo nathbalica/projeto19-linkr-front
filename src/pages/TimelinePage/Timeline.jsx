@@ -15,14 +15,15 @@ import {
 } from "./styles"; // Importe o ContainerHashtags
 import Hashtags from "../../components/Hashtags/Hashtags";
 import useAuth from "../../hooks/useAuth";
-import SearchBar from "../../components/Header/SearchBar"
+import SearchBar from "../../components/Header/SearchBar";
 import { styled } from "styled-components";
 
 export default function Timeline() {
     const [timeline, setTimeline] = useState([]);
+    const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const { userAuth } = useAuth()
+    const { userAuth } = useAuth();
 
     // const token = localStorage.getItem("userAuth")
     //     ? JSON.parse(localStorage.getItem("userAuth")).token
@@ -30,38 +31,29 @@ export default function Timeline() {
 
     useEffect(() => {
         if (userAuth.token) {
-            async function getTimeline() {
-                apis.timeline(userAuth.token)
-                    .then((data) => {
-                        setTimeline(data);
-                        setLoading(false);
-                    })
-                    .catch((error) => {
-                        console.error("Erro ao buscar timeline:", error);
-                        setLoading(false);
-                        setError(true);
-                    });
-            };
             getTimeline();
         }
-    }, [userAuth.token]);
+    }, [userAuth.token]);   
 
-    const updatePosts = () => {
-        setLoading(true);
-        getTimeline();
+    const getTimeline = async () => {
+        try { 
+            const data = await apis.timeline(userAuth.token, page)
+            setTimeline(data);
+            setLoading(false);
+            console.log(timeline);
+        } catch (error) {
+            console.error("Erro ao buscar timeline:", error);
+            setLoading(false);
+            setError(true);
+        };
     };
 
-    const getTimeline = () => {
-        apis.timeline(userAuth.token)
-            .then((data) => {
-                setTimeline(data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error("Erro ao buscar timeline:", error);
-                setLoading(false);
-                setError(true);
-            });
+    const updatePosts = () => {
+        if(loading) {
+            return;
+        }
+        setLoading(true);
+        getTimeline();
     };
 
     return (
@@ -103,7 +95,6 @@ export default function Timeline() {
                         ))
                     )}
                 </ContainerFeed>
-
                 <ContainerHashtags>
                     <Hashtags />
                 </ContainerHashtags>

@@ -73,6 +73,32 @@ export default function UserProfile() {
         } finally {
             setFollowLoading(false);
         }
+    
+    // async function getUserData(){
+    //     setLoading(true);
+    //     apis.getUser(user_id, userAuth.token)
+    //         .then((res) => {
+    //             const { username, profile_image, posts } = res.data;
+    //             setUserData({ username, profile_image });
+    //             setUserPosts(posts);
+    //             setLoading(false);
+    //         })
+    //         .catch((error) => {
+    //             setError("An error occurred while fetching user data.");
+    //             setLoading(false);
+    //         });
+    // };
+
+    // useEffect(() => {
+    //     getUserData()
+    // }, [user_id, userAuth.token]);
+
+    const updatePosts = () => {
+        if(loading) {
+            return;
+        }
+        setLoading(true);
+        // getUserData();
     };
 
     return (
@@ -99,7 +125,11 @@ export default function UserProfile() {
                         <NoPostsMessage>No posts for this user...</NoPostsMessage>
                     ) : (
                         userPosts.map((post, index) => (
-                            <Posts key={index} post={post} />
+                            <Posts
+                                key={index}
+                                post={post}
+                                updatePosts={updatePosts}
+                            />
                         ))
                     )}
                 </ContainerFeed>
